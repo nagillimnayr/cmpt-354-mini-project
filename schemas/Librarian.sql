@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS Librarian (
+  librarianId INT PRIMARY KEY AUTOINCREMENT NOT NULL,
+  firstName VARCHAR(64),
+  lastName VARCHAR(64)
+)
