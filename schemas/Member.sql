@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS Member (
+  memberId INT PRIMARY KEY AUTOINCREMENT NOT NULL,
+  firstName VARCHAR(64),
+  lastName VARCHAR(64),
+  dateOfBirth DATE,
+  phoneNumber VARCHAR(25)
+)
