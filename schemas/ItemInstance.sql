@@ -1,4 +1,4 @@
-CREATE TABLE ItemInstance (
+CREATE TABLE IF NOT EXISTS ItemInstance (
     instanceId INTEGER PRIMARY KEY,
     itemId INTEGER NOT NULL,
     currentCheckoutId INTEGER, -- nullable, because the item may not be currently checked out

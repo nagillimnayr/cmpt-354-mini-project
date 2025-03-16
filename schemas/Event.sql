@@ -1,4 +1,4 @@
-CREATE TABLE Event (
+CREATE TABLE IF NOT EXISTS Event (
     eventId INTEGER PRIMARY KEY,
     title VARCHAR(200) NOT NULL,
     description TEXT,

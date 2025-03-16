@@ -1,4 +1,4 @@
-CREATE TABLE CheckoutRecord (
+CREATE TABLE IF NOT EXISTS CheckoutRecord (
     checkoutId INTEGER PRIMARY KEY,
     memberId INTEGER NOT NULL,
     itemId INTEGER NOT NULL,

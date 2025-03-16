@@ -1,3 +1,3 @@
-CREATE TABLE Audience (
+CREATE TABLE IF NOT EXISTS Audience (
     audienceType VARCHAR(50) PRIMARY KEY
 );

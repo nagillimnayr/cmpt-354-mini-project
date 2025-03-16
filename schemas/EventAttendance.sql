@@ -1,4 +1,4 @@
-CREATE TABLE EventAttendance (
+CREATE TABLE IF NOT EXISTS EventAttendance (
     eventId INTEGER NOT NULL,
     memberId INTEGER NOT NULL,
     PRIMARY KEY (eventId, memberId),

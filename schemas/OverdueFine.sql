@@ -1,4 +1,4 @@
-CREATE TABLE OverdueFine (
+CREATE TABLE IF NOT EXISTS OverdueFine (
     fineId INTEGER PRIMARY KEY,
     checkoutId INTEGER NOT NULL,
     fineTotal DECIMAL(5,2) NOT NULL,

@@ -1,4 +1,4 @@
-CREATE TABLE MemberAudienceType (
+CREATE TABLE IF NOT EXISTS MemberAudienceType (
     memberId INTEGER NOT NULL,
     audienceType VARCHAR(50) NOT NULL,
     PRIMARY KEY (memberId, audienceType),
