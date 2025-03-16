@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS Item (
     title VARCHAR(100) NOT NULL,
     author VARCHAR(100),
     format VARCHAR(50),
+    description TEXT,
     publishDate DATE,
     publisher VARCHAR(100)
 );
