@@ -14,7 +14,7 @@ def create_tables():
       command = file.read()
       cursor.execute(command)
       
-    
+def insert_sample_data():
 
 def main():
   create_tables()
