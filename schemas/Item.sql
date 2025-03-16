@@ -1,0 +1,8 @@
+CREATE TABLE Item (
+    itemId INTEGER PRIMARY KEY,
+    title VARCHAR(200) NOT NULL,
+    author VARCHAR(100),
+    format VARCHAR(50),
+    publishDate DATE,
+    publisher VARCHAR(100)
+);
