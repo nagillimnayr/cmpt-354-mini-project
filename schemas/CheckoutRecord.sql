@@ -9,7 +9,6 @@ CREATE TABLE IF NOT EXISTS CheckoutRecord (
     returnDate DATE,
 
     FOREIGN KEY (memberId) REFERENCES Member(memberId),
-    FOREIGN KEY (itemId) REFERENCES Item(itemId),
-    FOREIGN KEY (instanceId) REFERENCES ItemInstance(instanceId),
+    FOREIGN KEY (instanceId, itemId) REFERENCES ItemInstance(instanceId, itemId),
     FOREIGN KEY (librarianId) REFERENCES Librarian(librarianId)
 );
