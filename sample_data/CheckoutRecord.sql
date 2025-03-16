@@ -15,21 +15,3 @@ VALUES
   (13, 13, 11, 12, 3, '2025-02-18', '2025-03-04', NULL), -- Not yet returned
   (14, 14, 13, 14, 1, '2025-02-22', '2025-03-08', NULL), -- Not yet returned
   (15, 15, 15, 15, 2, '2025-03-01', '2025-03-15', NULL); -- Not yet returned
-
-UPDATE ItemInstance
-SET currentCheckoutId = 3 WHERE instanceId = 5;
-
-UPDATE ItemInstance
-SET currentCheckoutId = 4 WHERE instanceId = 7;
-
-UPDATE ItemInstance
-SET currentCheckoutId = 5 WHERE instanceId = 9;
-
-UPDATE ItemInstance
-SET currentCheckoutId = 6 WHERE instanceId = 11;
-
-UPDATE ItemInstance
-SET currentCheckoutId = 7 WHERE instanceId = 13;
-
-UPDATE ItemInstance
-SET currentCheckoutId = 8 WHERE instanceId = 15;

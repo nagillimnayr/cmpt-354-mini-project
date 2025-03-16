@@ -8,9 +8,10 @@ def create_tables():
   """ 
   Reads in SQL commands from files in schemas/ folder and executes them. 
   """
-  schema_files = os.listdir('schemas')
+  dir = 'schemas'
+  schema_files = os.listdir(dir)
   for file_name in schema_files:
-    with open(f'schemas/{file_name}') as file:
+    with open(f'{dir}/{file_name}') as file:
       command = file.read()
       cursor.execute(command)
       
