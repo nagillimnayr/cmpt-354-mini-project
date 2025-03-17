@@ -34,6 +34,8 @@ def create_tables():
     END;
     """
   )
+  
+  connection.commit()
 
 def main():
   create_tables()
