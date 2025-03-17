@@ -1,17 +1,12 @@
-import sqlite3
+from borrow_item import borrow_item
 
+db_path = 'library.db'
 
-def main():
-  connection = sqlite3.connect('library.db')
-  cursor = connection.cursor()
-  
-  cursor.execute("""
-    SELECT * FROM ItemInstance;  
-    """
-  )
-  result = cursor.fetchall()
-  print(result)
+def test_queries():
+  borrow_item(db_path, 1, 1, 1)
+  borrow_item(db_path, 1, 1, 1)
+  borrow_item(db_path, 1, 1, 1)
 
   
 if __name__ == '__main__':
-  main()
+  test_queries()
