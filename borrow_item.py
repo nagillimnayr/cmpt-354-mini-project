@@ -1,7 +1,9 @@
 import sqlite3
 from datetime import datetime, timedelta
 
-def borrow_item(db_path, member_id, item_id, librarian_id):
+from constants import DB_PATH
+
+def borrow_item(member_id, item_id, librarian_id):
     """
     Goal, borrow an item from the library.
     Steps:
@@ -12,7 +14,7 @@ def borrow_item(db_path, member_id, item_id, librarian_id):
     
     try:
         # Connect to SQLite database
-        conn = sqlite3.connect(db_path)
+        conn = sqlite3.connect(DB_PATH)
         cursor = conn.cursor()
 
         # Step 1: Find an available item instance
@@ -59,4 +61,3 @@ def borrow_item(db_path, member_id, item_id, librarian_id):
 
     finally:
         conn.close()  # Close connection
-
