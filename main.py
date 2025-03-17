@@ -40,5 +40,20 @@ def create_tables():
 def main():
   create_tables()
   
+  """
+  Step 7
+  Use python and sqlite to build your database application to allow a library user to:
+  
+  [ ] - Find an item in the library
+  [x] - Borrow an item from the library
+  [ ] - Return a borrowed item
+  [ ] - Donate an item to the library
+  [ ] - Find an event in the library
+  [ ] - Register for an event in the library
+  [ ] - Volunteer for the library
+  [ ] - Ask for help from a librarian
+  
+  """
+  
 if __name__ == '__main__':
   main()
