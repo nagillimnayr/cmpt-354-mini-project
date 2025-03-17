@@ -14,7 +14,6 @@ def borrow_item(member_id, item_id, librarian_id):
     with sqlite3.connect(DB_PATH) as conn:
         try:
             # Connect to SQLite database
-            conn = sqlite3.connect(DB_PATH)
             cursor = conn.cursor()
 
             # Step 1: Find an available item instance
