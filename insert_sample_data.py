@@ -52,6 +52,8 @@ def insert_sample_data():
   
   for update in updates:
     cursor.execute(update)
+    
+  connection.commit()
 
 def main():
   insert_sample_data()
