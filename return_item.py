@@ -15,7 +15,7 @@ def return_item(item_id, instance_id):
         with sqlite3.connect(DB_PATH) as conn:
             cursor = conn.cursor()
 
-            print(f"Checking if Item ID {item_id}, Instance ID {instance_id} is currently borrowed...")
+            print(f"🔎 Checking if Item ID {item_id}, Instance ID {instance_id} is currently borrowed...")
 
             # Step 1: Find active checkout record
             cursor.execute("""
