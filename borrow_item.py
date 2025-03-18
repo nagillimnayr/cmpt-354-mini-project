@@ -14,7 +14,7 @@ def borrow_item(member_id, item_id, librarian_id):
         with sqlite3.connect(DB_PATH) as conn:
             cursor = conn.cursor()
 
-            print(f"Checking for available copies of Item ID {item_id}...")
+            print(f"🔎 Checking for available copies of Item ID {item_id}...")
 
             # Step 1: Find an available copy (not checked out)
             cursor.execute("""
