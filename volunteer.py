@@ -15,6 +15,7 @@ def _find_librarian_id_by_member_id(member_id: int):
     """, (member_id,))
     librarian_id = cursor.fetchone()
     return librarian_id
+  
 
 def register_member_as_volunteer(member_id: int):
   """

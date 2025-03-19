@@ -2,7 +2,7 @@ import sqlite3
 
 from constants import *
 from insert_sample_data import *
-from main import *
+from create_tables import *
 
 TABLES = [
   'Audience',
@@ -12,10 +12,10 @@ TABLES = [
   'EventRecommendation',
   'Item',
   'ItemInstance',
-  'Librarian',
   'Member',
   'MemberAudienceType',
   'OverdueFine',
+  'Personnel',
   'SocialRoom',
 ]
 DROP_TABLE_COMMAND = ["DROP TABLE IF EXISTS " + table + ";" for table in TABLES]

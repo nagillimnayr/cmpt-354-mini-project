@@ -53,7 +53,7 @@ def main():
   [x] - Donate an item to the library
   [x] - Find an event in the library
   [x] - Register for an event in the library
-  [ ] - Volunteer for the library
+  [x] - Volunteer for the library
   [ ] - Ask for help from a librarian
   
   """

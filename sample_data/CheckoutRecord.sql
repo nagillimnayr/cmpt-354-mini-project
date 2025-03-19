@@ -1,4 +1,4 @@
-INSERT INTO CheckoutRecord (checkoutId, memberId, itemId, instanceId, librarianId, checkoutDate, dueDate, returnDate) 
+INSERT INTO CheckoutRecord (checkoutId, memberId, itemId, instanceId, personnelId, checkoutDate, dueDate, returnDate) 
 VALUES
   (1, 1, 1, 1, 1, '2025-01-02', '2025-01-16', '2025-01-15'), -- Returned 1 day early
   (2, 2, 2, 3, 2, '2025-01-05', '2025-01-19', '2025-01-22'), -- Returned 3 days late
