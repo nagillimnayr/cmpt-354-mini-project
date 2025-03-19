@@ -30,7 +30,6 @@ def find_item(search_term: str):
     )
     results = cursor.fetchall()
     pretty_print(results)
-    connection.close()
 
     
     

@@ -47,7 +47,7 @@ def main():
   Step 7
   Use python and sqlite to build your database application to allow a library user to:
   
-  [ ] - Find an item in the library
+  [x] - Find an item in the library
   [x] - Borrow an item from the library
   [x] - Return a borrowed item
   [x] - Donate an item to the library
