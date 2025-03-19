@@ -14,4 +14,4 @@ VALUES
   (12, 'The Catcher in the Rye', 'J.D. Salinger', 'Book', '1951-07-16', 'Little, Brown and Company'),
   (13, 'Cosmos', 'Carl Sagan', 'Book', '1980-10-12', 'Random House'),
   (14, 'The Art of War', 'Sun Tzu', 'Book', '500 BC', 'Various'),
-  (15, 'Shakespeare’s Sonnets', 'William Shakespeare', 'Book', '1609-05-20', 'Thomas Thorpe');
+  (15, "Shakespeare's Sonnets", 'William Shakespeare', 'Book', '1609-05-20', 'Thomas Thorpe');
