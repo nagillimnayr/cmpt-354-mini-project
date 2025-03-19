@@ -7,6 +7,7 @@ from find_event import *
 from register_for_event import *
 from constants import *
 from find_item import *
+from volunteer import register_member_as_volunteer
 
 # def test_queries():
     
@@ -38,7 +39,8 @@ from find_item import *
 
 
 def test_queries():
-  find_item_by_id(6)
+  # find_item_by_id(6)
+  register_member_as_volunteer(11)
 
 
 if __name__ == '__main__':
