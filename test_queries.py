@@ -38,7 +38,7 @@ from find_item import *
 
 
 def test_queries():
-  find_item("s")
+  find_item_by_id(6)
 
 
 if __name__ == '__main__':

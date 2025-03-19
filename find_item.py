@@ -2,7 +2,7 @@ import sqlite3
 from constants import DB_PATH
 from utils import pretty_print
 
-def find_item(search_term: str):
+def search_for_item(search_term: str):
   """
   Searches for an Item based on the provided search term. 
   Will compare the search term with the `title`, `author`, `description`, 
@@ -30,6 +30,23 @@ def find_item(search_term: str):
     )
     results = cursor.fetchall()
     pretty_print(results)
+  
+  return results
+
+def find_item_by_id(item_id: int):
+  query = """
+    SELECT * 
+    FROM Item
+    WHERE Item.itemId = ?;
+  """
+  with sqlite3.connect(DB_PATH) as connection:
+    cursor = connection.cursor()
+    cursor.execute(query, (item_id,))
+    result = cursor.fetchone()
+    pretty_print(result)
+  return result
+  
+  
 
     
     
