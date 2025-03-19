@@ -2,6 +2,7 @@ import sqlite3
 from datetime import datetime
 
 from constants import DB_PATH
+from utils import get_current_date
 
 def return_item(item_id, instance_id):
     """
@@ -32,7 +33,7 @@ def return_item(item_id, instance_id):
             print(f"✅ Found active checkout: Checkout ID {checkout_id}, Due Date {due_date}")
 
             # Step 2: Mark the checkout record as returned
-            today = datetime.now().strftime("%Y-%m-%d")
+            today = get_current_date()
             cursor.execute("""
                 UPDATE CheckoutRecord
                 SET returnDate = ?
@@ -65,4 +66,3 @@ def return_item(item_id, instance_id):
 
     except sqlite3.Error as e:
         print(f"Database error: {e}")
-
