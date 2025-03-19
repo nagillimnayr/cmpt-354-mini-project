@@ -1,19 +1,19 @@
 import sqlite3
 
 from borrow_item import *
-from return_item import return_item
-from donate_item import donate_item
-from find_event import find_event
-from register_for_event import register_for_event
+from return_item import *
+from donate_item import *
+from find_event import *
+from register_for_event import *
 from constants import *
 from find_item import *
 
-def test_queries():
+# def test_queries():
     
-  borrow_item(member_id=3, item_id=5, librarian_id=2)
+#   borrow_item(member_id=3, item_id=5, librarian_id=2)
 
-  with sqlite3.connect(DB_PATH) as connection:
-    cursor = connection.cursor()
+#   with sqlite3.connect(DB_PATH) as connection:
+#     cursor = connection.cursor()
     # cursor.execute("""
     #   SELECT * FROM CheckoutRecord
     #   WHERE memberId = 3;  
