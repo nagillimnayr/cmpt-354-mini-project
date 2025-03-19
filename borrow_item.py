@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 
 from constants import DB_PATH
 
-def borrow_item(member_id, item_id, librarian_id):
+def borrow_item(member_id, item_id, personnel_id):
     """
     Handles borrowing an item:
     1. Checks for available copies.
@@ -36,9 +36,9 @@ def borrow_item(member_id, item_id, librarian_id):
             due_date = (datetime.now() + timedelta(days=14)).strftime("%Y-%m-%d")
 
             cursor.execute("""
-                INSERT INTO CheckoutRecord (memberId, itemId, instanceId, librarianId, checkoutDate, dueDate, returnDate)
+                INSERT INTO CheckoutRecord (memberId, itemId, instanceId, personnelId, checkoutDate, dueDate, returnDate)
                 VALUES (?, ?, ?, ?, ?, ?, NULL);
-            """, (member_id, item_id, instance_id, librarian_id, checkout_date, due_date))
+            """, (member_id, item_id, instance_id, personnel_id, checkout_date, due_date))
 
             checkout_id = cursor.lastrowid  # Retrieve the newly inserted checkoutId
             print(f"✅ Step 2: Created checkout record - Checkout ID {checkout_id}, Due Date {due_date}")
