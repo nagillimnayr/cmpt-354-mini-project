@@ -1,5 +1,8 @@
 CREATE TABLE IF NOT EXISTS Librarian (
-  librarianId INTEGER PRIMARY KEY NOT NULL,
-  firstName VARCHAR(50) NOT NULL,
-  lastName VARCHAR(50) NOT NULL
+  librarianId INTEGER PRIMARY KEY,
+  memberId INTEGER NOT NULL UNIQUE,
+  isVolunteer BOOLEAN NOT NULL,
+  dateJoined DATE NOT NULL,
+
+  FOREIGN KEY (memberId) REFERENCES Member(memberId)
 );

@@ -1,17 +1,7 @@
-INSERT INTO Librarian (librarianId, firstName, lastName) 
+INSERT INTO Librarian (librarianId, memberId, isVolunteer, dateJoined) 
 VALUES
-  (01, 'John', 'Roberts'),
-  (02, 'Laura', 'Bennett'),
-  (03, 'Emily', 'Adams'),
-  (04, 'Michael', 'Stevens'),
-  (05, 'Sarah', 'Hernandez'),
-  (06, 'Daniel', 'Cooper'),
-  (07, 'Jessica', 'Reed'),
-  (08, 'Matthew', 'Carter'),
-  (09, 'Ashley', 'Walker'),
-  (10, 'Christopher', 'Evans'),
-  (11, 'Samantha', 'Flores'),
-  (12, 'Ryan', 'Mitchell'),
-  (13, 'Olivia', 'Gonzalez'),
-  (14, 'Brandon', 'Parker'),
-  (15, 'Sophia', 'Hall');
+  (1, 1,  FALSE, '2024-02-21'),
+  (2, 2,  FALSE, '2024-04-07'),
+  (3, 3,  FALSE, '2024-11-15'),
+  (4, 7,  TRUE,  '2025-01-09'),
+  (5, 13, TRUE,  '2025-02-18');
