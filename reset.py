@@ -10,6 +10,8 @@ TABLES = [
   'Event',
   'EventAttendance',
   'EventRecommendation',
+  'HelpAnswer',
+  'HelpQuestion',
   'Item',
   'ItemInstance',
   'Member',
