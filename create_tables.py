@@ -3,21 +3,33 @@ import os
 
 from constants import DB_PATH
 
+def execute_sql_in_directory(dir_name: str):
+  """
+  Reads all .sql files from a directory and executes the commands within.
+  """
+  with sqlite3.connect(DB_PATH) as connection:
+    cursor = connection.cursor()
+    schema_files = os.listdir(dir_name)
+    for file_name in schema_files:
+      with open(f'{dir_name}/{file_name}') as file:
+        command = file.read()
+        cursor.execute(command)
 
 
 def create_tables():
   """ 
-  Reads in SQL commands from files in schemas/ folder and executes them. 
+  Reads in SQL commands from files in schemas folder and executes them. 
   """
+  execute_sql_in_directory('schemas')
+    
+    
+def create_views():
+    execute_sql_in_directory('views')
+
+
+def create_triggers():
   with sqlite3.connect(DB_PATH) as connection:
     cursor = connection.cursor()
-    dir = 'schemas'
-    schema_files = os.listdir(dir)
-    for file_name in schema_files:
-      with open(f'{dir}/{file_name}') as file:
-        command = file.read()
-        cursor.execute(command)
-    
     """
     We can't use subqueries inside `CHECK` or `ASSERTION` statements, so we must
     use a `TRIGGER` to impose constraint on number of `OverdueFine`s for a single
@@ -37,11 +49,11 @@ def create_tables():
       END;
       """
     )
-    
-    connection.commit()
 
-def main():
+def create_database():
   create_tables()
+  create_views()
+  create_triggers()
   
   """
   Step 7
@@ -57,9 +69,11 @@ def main():
   [ ] - Ask for help from a librarian
   
   """
-  
+
+
+
 if __name__ == '__main__':
   try:
-    main()
+    create_database()
   except sqlite3.Error as e:
     print(e)

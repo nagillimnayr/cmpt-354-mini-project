@@ -28,7 +28,7 @@ def reset_db():
     for cmd in DROP_TABLE_COMMAND:
       cursor.execute(cmd)
     
-  create_tables()
+  create_database()
   insert_sample_data()
 
 if __name__ == '__main__':
