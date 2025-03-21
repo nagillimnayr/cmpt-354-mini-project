@@ -9,11 +9,13 @@ def execute_sql_in_directory(dir_name: str):
   """
   with sqlite3.connect(DB_PATH) as connection:
     cursor = connection.cursor()
-    schema_files = os.listdir(dir_name)
-    for file_name in schema_files:
+    files = os.listdir(dir_name)
+    for file_name in files:
       with open(f'{dir_name}/{file_name}') as file:
         command = file.read()
+        print(command)
         cursor.execute(command)
+        
 
 
 def create_tables():
