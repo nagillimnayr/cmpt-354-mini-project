@@ -12,7 +12,8 @@ from volunteer import *
 
 
 def test_queries():
-  post_question(10, "Hello, SQLite!")
+  post_question(10, "Hello, Question!")
+  post_answer(5, 1, "Hello, Answer!")
   
   questions = get_questions_with_answers()
   pretty_print(questions)

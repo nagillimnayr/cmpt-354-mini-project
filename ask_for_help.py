@@ -45,17 +45,47 @@ def get_questions_with_answers():
 
 def post_question(member_id: int, question: str):
   current_date = get_current_date()
-  conn = sqlite3.connect(DB_PATH)
-  with conn:
-    conn.execute("""
-      INSERT INTO HelpQuestion (
-        memberId, 
-        question, 
-        datePublished
-      ) VALUES (:member_id, :question, :date_published);
-      
-    """, {
-      'member_id': member_id,
-      'question': question,
-      'date_published': current_date
-    })
+  try:
+    conn = sqlite3.connect(DB_PATH)
+    with conn:
+      conn.execute("""
+        INSERT INTO HelpQuestion (
+          memberId, 
+          question, 
+          datePublished
+        ) VALUES (:member_id, :question, :date_published);
+        
+      """, {
+        'member_id': member_id,
+        'question': question,
+        'date_published': current_date
+      })
+  except sqlite3.Error as e:
+    print(f"Database error: {e}")
+  else:
+    print(f"✅ Uploaded question: {question}")
+    
+    
+def post_answer(question_id:int, personnel_id: int, answer: str):
+  current_date = get_current_date()
+  try:
+    conn = sqlite3.connect(DB_PATH)
+    with conn:
+      conn.execute("""
+        INSERT INTO HelpAnswer (
+          questionId,
+          personnelId, 
+          answer, 
+          datePublished
+        ) VALUES (:question_id, :personnel_id, :answer, :date_published);
+        
+      """, {
+        'question_id': question_id,
+        'personnel_id': personnel_id,
+        'answer': answer,
+        'date_published': current_date
+      })
+  except sqlite3.Error as e:
+    print(f"Database error: {e}")
+  else:
+    print(f"✅ Uploaded answer: {answer}")
