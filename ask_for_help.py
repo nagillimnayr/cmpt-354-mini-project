@@ -3,7 +3,7 @@
 import sqlite3
 
 from constants import DB_PATH
-from utils import dict_row_factory
+from utils import dict_row_factory, get_current_date
 
 
 
@@ -41,3 +41,21 @@ def get_questions_with_answers():
     question_with_answers['answers'] = get_answers_to_question(question_id)
     questions_with_answers.append(question_with_answers)
   return questions_with_answers
+
+
+def post_question(member_id: int, question: str):
+  current_date = get_current_date()
+  conn = sqlite3.connect(DB_PATH)
+  with conn:
+    conn.execute("""
+      INSERT INTO HelpQuestion (
+        memberId, 
+        question, 
+        datePublished
+      ) VALUES (:member_id, :question, :date_published);
+      
+    """, {
+      'member_id': member_id,
+      'question': question,
+      'date_published': current_date
+    })
