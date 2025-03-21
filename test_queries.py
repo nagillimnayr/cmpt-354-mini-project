@@ -1,8 +1,7 @@
 import sqlite3
 
-from ask_for_help import list_answers_to_question, list_questions
+from ask_for_help import *
 from borrow_item import *
-from reset import drop_views
 from return_item import *
 from donate_item import *
 from find_event import *
@@ -13,11 +12,8 @@ from volunteer import *
 
 
 def test_queries():
-  # find_item_by_id(6)
-  # register_member_as_volunteer(11)
-  # list_questions()
-  list_answers_to_question(2)
-  # drop_views()
+  questions = get_questions_with_answers()
+  pretty_print(questions)
 
 
 if __name__ == '__main__':
