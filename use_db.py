@@ -47,26 +47,51 @@ while uInput not in ['q', 'quit', 'kill']:
             'Ask Librarian:        -ask     -askhelp')
     
     # Check for input in db keywords
-    if sInput[0] in [KEYWORDS]:
+    if sInput[0] in KEYWORDS:
+        isContinue = False
         match sInput[0]:
             case 'fnditm' | 'finditem':
-                print('')
+                print('Foo')
             case 'brw' | 'borrowitem':
-                mId = input()
+                mId = input('\nMember ID: ')
+                while not mId.isdigit():
+                    if mId == 'b': 
+                        isContinue = True
+                        break
+                    mId = input('\nInvalid mId, enter again: ')
+                if isContinue: continue 
+
+                itemId = input('Item ID: ')
+                while not itemId.isdigit():
+                    if itemId == 'b': 
+                        isContinue = True
+                        break
+                    itemId = input('\nInvalid itemId, enter again: ')
+                if isContinue: continue 
+
+                lId = input('Librarian ID: ')
+                while not lId.isdigit():
+                    if lId == 'b': 
+                        isContinue = True
+                        break
+                    lId = input('\nInvalid lId, enter again: ')
+                if isContinue: continue 
+
+                db_functions.borrow_item(mId, itemId, lId)
             case 'rtn' | 'returnitem':
-                print('')
+                print('Foo')
             case 'dnt' | 'donateitem':
-                print('')
+                print('Foo')
             case 'fndevt' | 'findevent':
-                print('')
+                print('Foo')
             case 'reg' | 'register':
-                print('')
+                print('Foo')
             case 'vlt' | 'volunteer':
-                print('')
+                print('Foo')
             case 'ask' | 'askhelp':
-                print('')
+                print('Foo')
             case _:
-                print('')
+                print('base case')
 
 print('Exiting...')
 
