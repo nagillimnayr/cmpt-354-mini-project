@@ -17,7 +17,7 @@ while uInput not in ['q', 'quit', 'kill']:
                 case 'brw' | 'borrowitem':
                     print('Description: checkout item from the library')
                 case 'rtn' | 'returnitem':
-                    print('Description: return a previously checkedout item to the library')
+                    print('Description: return a previously checked out item to the library')
                 case 'dnt' | 'donateitem':
                     print('Description: donate an item to the library`s collection')
                 case 'fndevt' | 'findevent':
