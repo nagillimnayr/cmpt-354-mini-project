@@ -205,8 +205,8 @@ def donate_item(title:str, author:str, format:str, description:str, publish_date
             # Step 3: Add a new instance to ItemInstance
             cursor.execute("""
                 INSERT INTO ItemInstance (instanceId, itemId, currentCheckoutId)
-                VALUES ((SELECT COALESCE(MAX(instanceId), 0) + 1 FROM ItemInstance), ?, NULL);
-            """, (item_id,))
+                VALUES ((SELECT COALESCE(MAX(instanceId), 0) + 1 FROM ItemInstance WHERE itemId = ?), ?, NULL);
+            """, (item_id, item_id))
 
             print(f"✅ New copy of '{title}' added to library (Item ID {item_id})")
 

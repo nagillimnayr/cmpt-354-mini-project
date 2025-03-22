@@ -1,4 +1,5 @@
 import db_functions
+from datetime import datetime
 
 KEYWORDS = ['fnditm', 'finditem', 'brw', 'borrowitem', 'rtn', 'returnitem', 'dnt', 'donate', 'fndevt', 'findevent', 'reg', 'register', 'vlt', 'volunteer', 'ask', 'askhelp']
 
@@ -48,40 +49,66 @@ while uInput not in ['q', 'quit', 'kill']:
     
     # Check for input in db keywords
     if sInput[0] in KEYWORDS:
-        isContinue = False
         match sInput[0]:
             case 'fnditm' | 'finditem':
                 print('Foo')
             case 'brw' | 'borrowitem':
-                mId = input('\nMember ID: ')
-                while not mId.isdigit():
-                    if mId == 'b': 
-                        isContinue = True
-                        break
-                    mId = input('\nInvalid mId, enter again: ')
-                if isContinue: continue 
+                mId = input('\nMember Id: ')
+                if mId == 'b': continue 
+                while not mId.isdigit(): mId = input('\nInvalid memberId, enter again: ')
 
-                itemId = input('Item ID: ')
-                while not itemId.isdigit():
-                    if itemId == 'b': 
-                        isContinue = True
-                        break
-                    itemId = input('\nInvalid itemId, enter again: ')
-                if isContinue: continue 
+                iId = input('Item Id: ')
+                if iId == 'b': continue 
+                while not iId.isdigit(): itemId = input('\nInvalid itemId, enter again: ')
 
-                lId = input('Librarian ID: ')
-                while not lId.isdigit():
-                    if lId == 'b': 
-                        isContinue = True
-                        break
-                    lId = input('\nInvalid lId, enter again: ')
-                if isContinue: continue 
+                lId = input('Librarian Id: ')
+                if lId == 'b': continue 
+                while not lId.isdigit(): lId = input('\nInvalid librarianId, enter again: ')
 
-                db_functions.borrow_item(mId, itemId, lId)
+                db_functions.borrow_item(mId, iId, lId)
             case 'rtn' | 'returnitem':
-                print('Foo')
+                itemId = input('Item Id: ')
+                if itemId == 'b': continue 
+                while not itemId.isdigit(): itemId = input('\nInvalid itemId, enter again: ')
+
+                instanceId = input('Instance Id: ')
+                if instanceId == 'b': continue 
+                while not instanceId.isdigit(): instanceId = input('\nInvalid itemId, enter again: ')
+
+                db_functions.return_item(itemId, instanceId)
             case 'dnt' | 'donateitem':
-                print('Foo')
+                title = input('Title: ')
+                if title == 'b': continue
+                while len(title) == 0: title = input('Invalid title: ')
+
+                author = input('Author: ')
+                if author == 'b': continue
+                while len(author) == 0: author = input('Invalid author: ')
+
+                format = input('Format: ')
+                if format == 'b': continue
+                while len(format) == 0: format = input('Invalid format: ')
+
+                description = input('Description: ')
+                if description == 'b': continue
+                while len(description) == 0: description = input('Invalid description: ')
+                    
+                publishDate = input('Publish Date (YYYY-MM-DD): ')
+                if publishDate == 'b': continue
+                while len(publishDate) == 0: publishDate = input('Invalid publish date: ')
+                isValid = False
+                while not isValid:
+                    try:
+                        datetime.strptime(publishDate, '%Y-%m-%d')
+                        break
+                    except ValueError:
+                        publishDate = input('Invalid publish date: ')
+
+                publisher = input('Publisher: ')
+                if publisher == 'b': continue
+                while len(publisher) == 0: publisher = input('Invalid publisher: ') 
+
+                db_functions.donate_item(title, author, format, description, publishDate, publisher)
             case 'fndevt' | 'findevent':
                 print('Foo')
             case 'reg' | 'register':
