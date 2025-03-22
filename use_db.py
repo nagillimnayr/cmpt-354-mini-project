@@ -8,8 +8,10 @@ print('Hello, how can I assist you? (type help for a list of commands)')
 
 while uInput not in ['q', 'quit', 'kill']:
     uInput = input('\nEnter Input: ').strip().lower()
-    sInput = uInput.split()
 
+    if len(uInput) == 0: continue
+
+    sInput = uInput.split()
 
     # Check for input in help keywords
     if sInput[0] in ['h', 'help']:
