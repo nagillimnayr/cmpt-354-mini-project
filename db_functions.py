@@ -392,7 +392,8 @@ def get_answers_to_question(question_id: int) -> list[dict]:
     answers = conn.execute("""
       SELECT * 
       FROM HelpAnswerView
-      WHERE questionId = ?; 
+      WHERE questionId = ?
+      ORDER BY datePublished ASC;  
     """, (question_id,)).fetchall()
   conn.close()
   return answers
@@ -404,7 +405,8 @@ def get_questions() -> list[dict]:
   with conn:
     questions = conn.execute("""
       SELECT * 
-      FROM HelpQuestionView;                
+      FROM HelpQuestionView
+      ORDER BY datePublished ASC;                
     """).fetchall()
   conn.close()
   return questions
