@@ -9,6 +9,8 @@ print('Hello, how can I assist you? (type help for a list of commands)')
 while uInput not in ['q', 'quit', 'kill']:
     uInput = input('\nEnter Input: ').strip().lower()
     sInput = uInput.split()
+
+    # Check for input in help keywords
     if sInput[0] in ['h', 'help']:
         if len(sInput) > 1:
             match sInput[1]:
@@ -40,6 +42,26 @@ while uInput not in ['q', 'quit', 'kill']:
             'Register Event:       -reg     -register\n'
             'Volunteer:            -vlt     -volunteer\n'
             'Ask Librarian:        -ask     -askhelp')
-        
-
+    
+    # Check for input in db keywords
+    if sInput[0] in [KEYWORDS]:
+        match sInput[0]:
+            case 'fnditm' | 'finditem':
+                print('')
+            case 'brw' | 'borrowitem':
+                mId = input()
+            case 'rtn' | 'returnitem':
+                print('')
+            case 'dnt' | 'donateitem':
+                print('')
+            case 'fndevt' | 'findevent':
+                print('')
+            case 'reg' | 'register':
+                print('')
+            case 'vlt' | 'volunteer':
+                print('')
+            case 'ask' | 'askhelp':
+                print('')
+            case _:
+                print('')
 print('Exiting...')
