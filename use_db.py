@@ -10,7 +10,7 @@ while uInput not in ['q', 'quit', 'kill']:
     uInput = input('\nEnter Input: ').strip().lower()
     sInput = uInput.split()
     if sInput[0] in ['h', 'help']:
-        if len(sInput) > 1:
+        if len(sInput) > 0:
             match sInput[1]:
                 case 'fnditm' | 'finditem':
                     print('Description: search for item either by keyword(s) or itemId')
