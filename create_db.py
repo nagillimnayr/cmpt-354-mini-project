@@ -55,22 +55,6 @@ def create_database():
   create_tables()
   create_views()
   create_triggers()
-  
-  """
-  Step 7
-  Use python and sqlite to build your database application to allow a library user to:
-  
-  [x] - Find an item in the library
-  [x] - Borrow an item from the library
-  [x] - Return a borrowed item
-  [x] - Donate an item to the library
-  [x] - Find an event in the library
-  [x] - Register for an event in the library
-  [x] - Volunteer for the library
-  [ ] - Ask for help from a librarian
-  
-  """
-
 
 
 if __name__ == '__main__':
