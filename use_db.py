@@ -9,8 +9,8 @@ print('Hello, how can I assist you? (type help for a list of commands)')
 while uInput not in ['q', 'quit', 'kill']:
     uInput = input('\nEnter Input: ').strip().lower()
     sInput = uInput.split()
-    if sInput[0] in ['h', 'help']:
-        if len(sInput) > 0:
+    if len(sInput) == 0 or sInput[0] in ['h', 'help']:
+        if len(sInput) > 1:
             match sInput[1]:
                 case 'fnditm' | 'finditem':
                     print('Description: search for item either by keyword(s) or itemId')
