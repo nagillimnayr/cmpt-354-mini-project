@@ -10,6 +10,7 @@ while uInput not in ['q', 'quit', 'kill']:
     uInput = input('\nEnter Input: ').strip().lower()
     sInput = uInput.split()
 
+
     # Check for input in help keywords
     if sInput[0] in ['h', 'help']:
         if len(sInput) > 1:
@@ -19,7 +20,7 @@ while uInput not in ['q', 'quit', 'kill']:
                 case 'brw' | 'borrowitem':
                     print('Description: checkout item from the library')
                 case 'rtn' | 'returnitem':
-                    print('Description: return a previously checkedout item to the library')
+                    print('Description: return a previously checked out item to the library')
                 case 'dnt' | 'donateitem':
                     print('Description: donate an item to the library`s collection')
                 case 'fndevt' | 'findevent':
@@ -64,4 +65,6 @@ while uInput not in ['q', 'quit', 'kill']:
                 print('')
             case _:
                 print('')
+
 print('Exiting...')
+
