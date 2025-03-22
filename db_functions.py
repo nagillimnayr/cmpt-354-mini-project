@@ -1,7 +1,7 @@
 import sqlite3
 
 from datetime import datetime, timedelta
-from utils import get_current_date, pretty_print
+from utils import *
 
 from constants import DB_PATH
 
