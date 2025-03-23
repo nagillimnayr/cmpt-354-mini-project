@@ -2,7 +2,7 @@ INSERT INTO SocialRoom (roomId, name, capacity)
 VALUES
   (1, 'Main Hall', 100),
   (2, 'Conference Room A', 20),
-  (3, 'Children’s Room', 30),
+  (3, 'Childrens Room', 30),
   (4, 'Study Room 1', 6),
   (5, 'Study Room 2', 6),
   (6, 'Lecture Hall', 50),

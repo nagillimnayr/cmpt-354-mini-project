@@ -2,7 +2,7 @@ INSERT INTO Event (eventId, title, description, type, dateTimeStart, dateTimeEnd
 VALUES
   (1, 'New Year Book Club Kickoff', 'First book club of the year.', 'Book Club', '2025-01-05 18:00', '2025-01-05 20:00', 2),
   (2, 'Classic Movie Night', 'Screening of "Casablanca".', 'Film Screening', '2025-01-10 19:00', '2025-01-10 21:00', 8),
-  (3, 'Children’s Story Hour', 'Storytelling event for kids.', 'Storytelling', '2025-01-15 10:00', '2025-01-15 11:00', 3),
+  (3, 'Childrens Story Hour', 'Storytelling event for kids.', 'Storytelling', '2025-01-15 10:00', '2025-01-15 11:00', 3),
   (4, 'Introduction to AI', 'Talk on artificial intelligence.', 'Lecture', '2025-01-20 14:00', '2025-01-20 16:00', 12),
   (5, 'Poetry Night', 'Live poetry readings.', 'Reading', '2025-01-25 19:30', '2025-01-25 21:00', 7),
   (6, 'WWII History Discussion', 'Lecture by a historian.', 'Lecture', '2025-02-01 17:00', '2025-02-01 19:00', 6),
