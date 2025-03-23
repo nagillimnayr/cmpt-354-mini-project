@@ -51,70 +51,139 @@ while uInput not in ['q', 'quit', 'kill']:
     if sInput[0] in KEYWORDS:
         match sInput[0]:
             case 'fnditm' | 'finditem':
-                print('Foo')
+                while True:
+                    choice = input('Search by term (t) or by item Id (i): ')
+                    match choice:
+                        case 'b': break
+                        case 't': 
+                            sTerm = input('Search Term: ')
+                            if sTerm == 'b': break
+
+                            db_functions.search_for_item(sTerm)
+                        case 'i':
+                            iId = input('Item Id: ')
+                            if iId == 'b': break
+                            
+                            db_functions.find_item_by_id(iId)
+                    con = input('Would you like to search for another item? (y/n): ').strip().lower()
+                    if con == 'n': break
+                    elif not con == 'y': con = input('Invalid entry (y/n): ').strip().lower()
             case 'brw' | 'borrowitem':
-                mId = input('\nMember Id: ')
-                if mId == 'b': continue 
-                while not mId.isdigit(): mId = input('\nInvalid memberId, enter again: ')
+                while True:
+                    mId = input('\nMember Id: ')
+                    if mId == 'b': break 
+                    while not mId.isdigit(): mId = input('\nInvalid memberId, enter again: ')
 
-                iId = input('Item Id: ')
-                if iId == 'b': continue 
-                while not iId.isdigit(): itemId = input('\nInvalid itemId, enter again: ')
+                    iId = input('Item Id: ')
+                    if iId == 'b': break 
+                    while not iId.isdigit(): itemId = input('\nInvalid itemId, enter again: ')
 
-                lId = input('Librarian Id: ')
-                if lId == 'b': continue 
-                while not lId.isdigit(): lId = input('\nInvalid librarianId, enter again: ')
+                    lId = input('Librarian Id: ')
+                    if lId == 'b': break 
+                    while not lId.isdigit(): lId = input('\nInvalid librarianId, enter again: ')
 
-                db_functions.borrow_item(mId, iId, lId)
+                    db_functions.borrow_item(mId, iId, lId)
+
+                    con = input('Would you like to borrow another item? (y/n): ').strip().lower()
+                    if con == 'n': break 
+                    elif not con == 'y': con = input('Invalid entry (y/n): ').strip().lower()
             case 'rtn' | 'returnitem':
-                itemId = input('Item Id: ')
-                if itemId == 'b': continue 
-                while not itemId.isdigit(): itemId = input('\nInvalid itemId, enter again: ')
+                while True:
+                    itemId = input('Item Id: ')
+                    if itemId == 'b': break 
+                    while not itemId.isdigit(): itemId = input('\nInvalid itemId, enter again: ')
 
-                instanceId = input('Instance Id: ')
-                if instanceId == 'b': continue 
-                while not instanceId.isdigit(): instanceId = input('\nInvalid itemId, enter again: ')
+                    instanceId = input('Instance Id: ')
+                    if instanceId == 'b': break 
+                    while not instanceId.isdigit(): instanceId = input('\nInvalid itemId, enter again: ')
 
-                db_functions.return_item(itemId, instanceId)
+                    db_functions.return_item(itemId, instanceId)
+
+                    con = input('Would you like to return another item? (y/n): ').strip().lower()
+                    if con == 'n': break 
+                    elif not con == 'y': con = input('Invalid entry (y/n): ').strip().lower()
             case 'dnt' | 'donateitem':
-                title = input('Title: ')
-                if title == 'b': continue
-                while len(title) == 0: title = input('Invalid title: ')
+                while True:
+                    title = input('Title: ')
+                    if title == 'b': break
+                    while len(title) == 0: title = input('Invalid title: ')
 
-                author = input('Author: ')
-                if author == 'b': continue
-                while len(author) == 0: author = input('Invalid author: ')
+                    author = input('Author: ')
+                    if author == 'b': break
+                    while len(author) == 0: author = input('Invalid author: ')
 
-                format = input('Format: ')
-                if format == 'b': continue
-                while len(format) == 0: format = input('Invalid format: ')
+                    format = input('Format: ')
+                    if format == 'b': break
+                    while len(format) == 0: format = input('Invalid format: ')
 
-                description = input('Description: ')
-                if description == 'b': continue
-                while len(description) == 0: description = input('Invalid description: ')
-                    
-                publishDate = input('Publish Date (YYYY-MM-DD): ')
-                if publishDate == 'b': continue
-                while len(publishDate) == 0: publishDate = input('Invalid publish date: ')
-                isValid = False
-                while not isValid:
-                    try:
-                        datetime.strptime(publishDate, '%Y-%m-%d')
-                        break
-                    except ValueError:
-                        publishDate = input('Invalid publish date: ')
+                    description = input('Description: ')
+                    if description == 'b': break
+                    while len(description) == 0: description = input('Invalid description: ')
+                        
+                    publishDate = input('Publish Date (YYYY-MM-DD): ')
+                    if publishDate == 'b': break
+                    while len(publishDate) == 0: publishDate = input('Invalid publish date: ')
+                    isValid = False
+                    while not isValid:
+                        try:
+                            datetime.strptime(publishDate, '%Y-%m-%d')
+                            break
+                        except ValueError:
+                            publishDate = input('Invalid publish date: ')
 
-                publisher = input('Publisher: ')
-                if publisher == 'b': continue
-                while len(publisher) == 0: publisher = input('Invalid publisher: ') 
+                    publisher = input('Publisher: ')
+                    if publisher == 'b': break
+                    while len(publisher) == 0: publisher = input('Invalid publisher: ') 
 
-                db_functions.donate_item(title, author, format, description, publishDate, publisher)
+                    db_functions.donate_item(title, author, format, description, publishDate, publisher)
+
+                    con = input('Would you like to donate another item? (y/n): ').strip().lower()
+                    if con == 'n': break 
+                    elif not con == 'y': con = input('Invalid entry (y/n): ').strip().lower()
             case 'fndevt' | 'findevent':
-                print('Foo')
+                while True:
+                    choice = input('Search by term (t) or by item Id (i): ')
+                    match choice:
+                        case 'b': break
+                        case 't': 
+                            sTerm = input('Search Term: ')
+                            if sTerm == 'b': break
+
+                            db_functions.search_for_event(sTerm)
+                        case 'i':
+                            eId = input('Event Id: ')
+                            if eId == 'b': break
+                            
+                            db_functions.find_event_by_id(eId)
+                    con = input('Would you like to search for another event? (y/n): ').strip().lower()
+                    if con == 'n': break 
+                    elif not con == 'y': con = input('Invalid entry (y/n): ').strip().lower()  
             case 'reg' | 'register':
-                print('Foo')
+                while True:
+                    mId = input('Member Id: ')
+                    if mId == 'b': break 
+                    while not mId.isdigit(): mId = input('\nInvalid memberId, enter again: ')
+
+                    eId = input('Event Id: ')
+                    if eId == 'b': break
+                    while not eId.isdigit(): eId = input('\nInvalid eventId, enter again: ')
+
+                    db_functions.register_for_event(mId, eId)
+
+                    con = input('Would you like to search for another event? (y/n): ').strip().lower()
+                    if con == 'n': break 
+                    elif not con == 'y': con = input('Invalid entry (y/n): ').strip().lower()
             case 'vlt' | 'volunteer':
-                print('Foo')
+                while True:
+                    mId = input('Member Id: ')
+                    if mId == 'b': break
+                    while not mId.isdigit(): mId = input('\nInvalid memberId, enter again: ')
+
+                    db_functions.register_member_as_volunteer(mId)
+
+                    con = input('Would you like to register another member? (y/n): ').strip().lower()
+                    if con == 'n': break 
+                    elif not con == 'y': con = input('Invalid entry (y/n): ').strip().lower()
             case 'ask' | 'askhelp':
                 print('Foo')
             case _:
