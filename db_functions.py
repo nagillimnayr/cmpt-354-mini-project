@@ -214,7 +214,7 @@ def donate_item(title:str, author:str, format:str, description:str, publish_date
         print(f"Database error: {e}")
 
 # Find event
-def find_event(search_term=None, event_type=None, date=None, audience=None):
+def search_for_event(search_term):
     """
     Searches for events in the library based on:
     - Title (search_term)
@@ -228,43 +228,49 @@ def find_event(search_term=None, event_type=None, date=None, audience=None):
 
             print("🔎 Searching for events...")
 
-            # Base SQL query
+            filters = [
+              'title',
+              'type',
+              'dateTimeStart',
+              'description'
+            ]
+            where_clause = " OR ".join([ "E." + filter + " LIKE :search" for filter in filters])
+            where_clause += " OR ER.audienceType LIKE :search"
+
             query = """
-                SELECT E.eventId, E.title, E.type, E.dateTimeStart, E.dateTimeEnd, S.name AS location
+                SELECT E.eventId, E.title, E.type, E.dateTimeStart, E.dateTimeEnd, S.name, ER.audienceType AS location
                 FROM Event E
                 LEFT JOIN SocialRoom S ON E.roomId = S.roomId
                 LEFT JOIN EventRecommendation ER ON E.eventId = ER.eventId
-                WHERE 1=1
-            """
-            params = []
-
-            # Apply filters based on user input
-            if search_term:
-                query += " AND E.title LIKE ?"
-                params.append(f"%{search_term}%")
-            if event_type:
-                query += " AND E.type = ?"
-                params.append(event_type)
-            if date:
-                query += " AND DATE(E.dateTimeStart) = ?"
-                params.append(date)
-            if audience:
-                query += " AND ER.audienceTypeFK = ?"
-                params.append(audience)
-
+                WHERE """ + where_clause + ';'
             # Execute query
-            cursor.execute(query, params)
+            cursor.execute("PRAGMA case_sensitive_like = false;")
+            cursor.execute(query, {
+                'search': '%'+search_term+'%'
+              }
+            )
             results = cursor.fetchall()
-
-            if results:
-                print("✅ Found events:")
-                for row in results:
-                    print(f"{row[1]} ({row[2]}) - {row[3]} to {row[4]} at {row[5]}")
-            else:
-                print("No events found matching the criteria.")
+            pretty_print(results)
 
     except sqlite3.Error as e:
         print(f"Database error: {e}")
+
+def find_event_by_id(event_id: int):
+  try:
+    with sqlite3.connect(DB_PATH) as conn:
+      cursor = conn.cursor()
+      cursor.execute("""
+        SELECT E.eventId, E.title, E.type, E.dateTimeStart, E.dateTimeEnd, S.name AS location
+          FROM Event E
+          LEFT JOIN SocialRoom S ON E.roomId = S.roomId
+          LEFT JOIN EventRecommendation ER ON E.eventId = ER.eventId
+          WHERE E.eventId = ?;
+        """, (event_id))
+      result = cursor.fetchall()
+      pretty_print(result)
+
+  except sqlite3.Error as e:
+    print(f"Database error: {e}")
 
 # register for event
 def register_for_event(member_id:int, event_id:int):
