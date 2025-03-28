@@ -4,18 +4,17 @@ from utils import *
 
 def format_item(item: dict) -> str:
   """
-  Formats an item for printing.
+  Formats an item into a string for printing.
   """
-  return f"""
-  Title: {item['title']}
-  Author: {item['author']}
-  Format: {item['format']}
-  Publisher: {item['publisher']}
-  Date Published: {item['publishDate']}
-  ID: {item['itemId']}
-  Description: {item['description']}
-  """
-  
+  return "\n".join([
+    f"Title: {item.get('title')}",
+    f"Author: {item.get('author')}",
+    f"Format: {item.get('format')}",
+    f"Publisher: {item.get('publisher')}",
+    f"Date Published: {item.get('publishDate')}",
+    f"ID: {item.get('itemId')}",
+    f"Description: {item.get('description')}",
+  ])
 
 def list_all_items():
   """
@@ -38,6 +37,5 @@ def list_all_items():
       print("No items found.")
       return
     
-    for item in items:
-      item_str = format_item(item)
-      print(item_str)
+    for item_str in [format_item(item) for item in items]:
+      print(item_str, end='\n\n')
