@@ -5,4 +5,5 @@ type Member = {
   dateOfBirth: Date;
   phoneNumber: string;
 };
+
 export default Member;

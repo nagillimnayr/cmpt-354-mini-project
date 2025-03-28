@@ -2,6 +2,20 @@ import sqlite3
 from constants import *
 from utils import *
 
+def get_items_list():
+  with sqlite3.connect(DB_PATH) as conn:
+    conn.row_factory = dict_row_factory
+    cursor = conn.cursor()
+    cursor.execute("""
+      SELECT * 
+      FROM Item 
+      ORDER BY 
+        format ASC,
+        title ASC;
+    """)
+    
+    return cursor.fetchall()
+
 def format_item(item: dict) -> str:
   """
   Formats an item into a string for printing.
@@ -16,26 +30,15 @@ def format_item(item: dict) -> str:
     f"Description: {item.get('description')}",
   ])
 
-def list_all_items():
+def print_items_list():
   """
-  Prints all items, sorted by format, then title.
+  Prints all items.
   """
-  with sqlite3.connect(DB_PATH) as conn:
-    conn.row_factory = dict_row_factory
-    cursor = conn.cursor()
-    cursor.execute("""
-      SELECT * 
-      FROM Item 
-      ORDER BY 
-        format ASC,
-        title ASC;
-    """)
-    
-    items = cursor.fetchall()
-    
-    if len(items) == 0:
-      print("No items found.")
-      return
-    
-    for item_str in [format_item(item) for item in items]:
-      print(item_str, end='\n\n')
+  items = get_items_list()
+  
+  if len(items) == 0:
+    print("No items found.")
+    return
+  
+  for item_str in [format_item(item) for item in items]:
+    print(item_str, end='\n\n')

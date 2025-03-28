@@ -3,7 +3,7 @@ import sqlite3
 from db_functions import *
 
 def test_queries():
-   list_all_items()
+   print_items_list()
   #  list_all_members()
 
 
