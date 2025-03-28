@@ -44,7 +44,7 @@ def drop_views():
 
 def drop_all():
   drop_tables()    
-  drop_views()
+  # drop_views()
   
 
 def execute_sql_in_directory(dir_name: str):
@@ -93,6 +93,52 @@ def create_triggers():
       END;
       """
     )
+    
+    """
+    Trigger to prevent checking out an `ItemInstance` that is already
+    checked out.
+    """
+    cursor.execute("""
+      CREATE TRIGGER IF NOT EXISTS prevent_checkout_of_checked_out_item_instance 
+      BEFORE INSERT ON CheckoutRecord
+      WHEN (
+        SELECT currentCheckoutId 
+        FROM ItemInstance
+        WHERE 
+          itemId = NEW.itemId 
+          AND
+          instanceId = NEW.instanceId
+      ) IS NOT NULL
+      BEGIN 
+        SELECT 
+        RAISE (ABORT, 'ItemInstance is already checked out');
+      END;
+    """)
+    
+    """ 
+    Trigger to set `currentCheckoutId` for `ItemInstance` when a new 
+    `CheckoutRecord` is inserted.
+    """
+    cursor.execute("""
+      CREATE TRIGGER IF NOT EXISTS set_current_checkout_id 
+      AFTER INSERT ON CheckoutRecord
+      WHEN (
+        SELECT currentCheckoutId 
+        FROM ItemInstance
+        WHERE 
+          itemId = NEW.itemId 
+          AND
+          instanceId = NEW.instanceId
+      ) IS NULL
+      BEGIN 
+        UPDATE ItemInstance
+        SET currentCheckoutId = NEW.checkoutId
+        WHERE 
+          itemId = NEW.itemId 
+          AND
+          instanceId = NEW.instanceId;
+      END;
+    """)
 
 def create_database():
   create_tables()
@@ -114,41 +160,41 @@ def insert_sample_data():
         command = file.read()
         cursor.execute(command)
         
-    updates = [
-      """
-      UPDATE ItemInstance
-      SET currentCheckoutId = 3 
-      WHERE instanceId = 5;
-      """,
-      """
-      UPDATE ItemInstance
-      SET currentCheckoutId = 4 
-      WHERE instanceId = 7;
-      """,
-      """
-      UPDATE ItemInstance
-      SET currentCheckoutId = 5 
-      WHERE instanceId = 9;
-      """,
-      """
-      UPDATE ItemInstance
-      SET currentCheckoutId = 6 
-      WHERE instanceId = 11;
-      """,
-      """
-      UPDATE ItemInstance
-      SET currentCheckoutId = 7 
-      WHERE instanceId = 13;
-      """,
-      """
-      UPDATE ItemInstance
-      SET currentCheckoutId = 8 
-      WHERE instanceId = 15;
-      """,
-    ]
+    # updates = [
+    #   """
+    #   UPDATE ItemInstance
+    #   SET currentCheckoutId = 3 
+    #   WHERE instanceId = 5;
+    #   """,
+    #   """
+    #   UPDATE ItemInstance
+    #   SET currentCheckoutId = 4 
+    #   WHERE instanceId = 7;
+    #   """,
+    #   """
+    #   UPDATE ItemInstance
+    #   SET currentCheckoutId = 5 
+    #   WHERE instanceId = 9;
+    #   """,
+    #   """
+    #   UPDATE ItemInstance
+    #   SET currentCheckoutId = 6 
+    #   WHERE instanceId = 11;
+    #   """,
+    #   """
+    #   UPDATE ItemInstance
+    #   SET currentCheckoutId = 7 
+    #   WHERE instanceId = 13;
+    #   """,
+    #   """
+    #   UPDATE ItemInstance
+    #   SET currentCheckoutId = 8 
+    #   WHERE instanceId = 15;
+    #   """,
+    # ]
     
-    for update in updates:
-      cursor.execute(update)
+    # for update in updates:
+    #   cursor.execute(update)
       
 
 if __name__ == '__main__':
