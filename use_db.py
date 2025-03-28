@@ -1,6 +1,9 @@
 import _db_functions
 from datetime import datetime
 
+from _db_functions import *
+from db_functions import *
+
 KEYWORDS = ['fnditm', 'finditem', 'brw', 'borrowitem', 'rtn', 'returnitem', 'dnt', 'donate', 'fndevt', 'findevent', 'reg', 'register', 'vlt', 'volunteer', 'ask', 'askhelp']
 
 uInput = ''
@@ -59,12 +62,12 @@ while uInput not in ['q', 'quit', 'kill']:
                             sTerm = input('Search Term: ')
                             if sTerm == 'b': break
 
-                            _db_functions.search_for_item(sTerm)
+                            search_for_item(sTerm)
                         case 'i':
                             iId = input('Item Id: ')
                             if iId == 'b': break
                             
-                            _db_functions.find_item_by_id(iId)
+                            find_item_by_id(iId)
                     con = input('Would you like to search for another item? (y/n): ').strip().lower()
                     if con == 'n': break
                     elif not con == 'y': con = input('Invalid entry (y/n): ').strip().lower()
