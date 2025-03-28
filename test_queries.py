@@ -6,7 +6,7 @@ from _db_functions import *
 def test_queries():
   # print_items_list()
   #  list_all_members()
-  # return_item()
+  return_item(6, 1)
 
 
 if __name__ == '__main__':
