@@ -4,6 +4,7 @@ from db_functions import *
 
 def test_queries():
    list_all_items()
+  #  list_all_members()
 
 
 
