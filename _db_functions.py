@@ -25,8 +25,8 @@ def search_for_item(search_term: str):
     FROM Item
     WHERE """ + where_clause + ";"
 
-  with sqlite3.connect(DB_PATH) as connection:
-    cursor = connection.cursor()
+  with sqlite3.connect(DB_PATH) as conn:
+    cursor = conn.cursor()
     cursor.execute("PRAGMA case_sensitive_like = false;")
     cursor.execute(query, {
         'search': '%'+search_term+'%'
@@ -43,8 +43,8 @@ def find_item_by_id(item_id: int):
     FROM Item
     WHERE Item.itemId = ?;
   """
-  with sqlite3.connect(DB_PATH) as connection:
-    cursor = connection.cursor()
+  with sqlite3.connect(DB_PATH) as conn:
+    cursor = conn.cursor()
     cursor.execute(query, (item_id,))
     result = cursor.fetchone()
     pretty_print(result)
@@ -59,48 +59,50 @@ def borrow_item(member_id:int, item_id:int):
     3. Updates ItemInstance to mark the item as checked out.
     """
     try:
-        with sqlite3.connect(DB_PATH) as conn:
-            cursor = conn.cursor()
+      conn = sqlite3.connect(DB_PATH)
+      conn.execute("PRAGMA foreign_keys = ON;")
+      with conn:
+          cursor = conn.cursor()
 
-            print(f"🔎 Checking for available copies of Item ID {item_id}...")
+          print(f"🔎 Checking for available copies of Item ID {item_id}...")
 
-            # Step 1: Find an available copy (not checked out)
-            cursor.execute("""
-                SELECT instanceId FROM ItemInstance
-                WHERE itemId = ? AND currentCheckoutId IS NULL
-                LIMIT 1;
-            """, (item_id,))
-            result = cursor.fetchone()
+          # Step 1: Find an available copy (not checked out)
+          cursor.execute("""
+              SELECT instanceId FROM ItemInstance
+              WHERE itemId = ? AND currentCheckoutId IS NULL
+              LIMIT 1;
+          """, (item_id,))
+          result = cursor.fetchone()
 
-            if not result:
-                print(f"Error: No available copies for Item ID {item_id}.")
-                return None
+          if not result:
+              print(f"Error: No available copies for Item ID {item_id}.")
+              return None
 
-            instance_id = result[0]
-            print(f"✅ Step 1: Found available copy - Instance ID {instance_id}")
+          instance_id = result[0]
+          print(f"✅ Step 1: Found available copy - Instance ID {instance_id}")
 
-            # Step 2: Insert a new checkout record
-            checkout_date = datetime.now().strftime("%Y-%m-%d")
-            due_date = (datetime.now() + timedelta(days=14)).strftime("%Y-%m-%d")
+          # Step 2: Insert a new checkout record
+          checkout_date = datetime.now().strftime("%Y-%m-%d")
+          due_date = (datetime.now() + timedelta(days=14)).strftime("%Y-%m-%d")
 
-            cursor.execute("""
-                INSERT INTO CheckoutRecord (memberId, itemId, instanceId, checkoutDate, dueDate, returnDate)
-                VALUES (?, ?, ?, ?, ?, NULL);
-            """, (member_id, item_id, instance_id, checkout_date, due_date))
+          cursor.execute("""
+              INSERT INTO CheckoutRecord (memberId, itemId, instanceId, checkoutDate, dueDate, returnDate)
+              VALUES (?, ?, ?, ?, ?, NULL);
+          """, (member_id, item_id, instance_id, checkout_date, due_date))
 
-            checkout_id = cursor.lastrowid  # Retrieve the newly inserted checkoutId
-            print(f"✅ Step 2: Created checkout record - Checkout ID {checkout_id}, Due Date {due_date}")
+          checkout_id = cursor.lastrowid  # Retrieve the newly inserted checkoutId
+          print(f"✅ Step 2: Created checkout record - Checkout ID {checkout_id}, Due Date {due_date}")
 
-            # Step 3: Update ItemInstance to mark it as checked out
-            cursor.execute("""
-                UPDATE ItemInstance
-                SET currentCheckoutId = ?
-                WHERE instanceId = ? AND itemId = ?;
-            """, (checkout_id, instance_id, item_id))
+          # Step 3: Update ItemInstance to mark it as checked out
+          cursor.execute("""
+              UPDATE ItemInstance
+              SET currentCheckoutId = ?
+              WHERE instanceId = ? AND itemId = ?;
+          """, (checkout_id, instance_id, item_id))
 
-            print(f"✅ Step 3: Item ID {item_id}, Instance ID {instance_id} marked as checked out.")
+          print(f"✅ Step 3: Item ID {item_id}, Instance ID {instance_id} marked as checked out.")
 
-            print(f"✅ Borrow process completed for Item ID {item_id}, Instance ID {instance_id}.")
+          print(f"✅ Borrow process completed for Item ID {item_id}, Instance ID {instance_id}.")
 
     except sqlite3.Error as e:
         print(f"Database error: {e}")
@@ -115,56 +117,58 @@ def return_item(item_id:int, instance_id:int):
     4. (Optional) Applies a fine if the item is overdue.
     """
     try:
-        with sqlite3.connect(DB_PATH) as conn:
-            cursor = conn.cursor()
+      conn = sqlite3.connect(DB_PATH)
+      conn.execute("PRAGMA foreign_keys = ON;")
+      with conn:
+          cursor = conn.cursor()
 
-            print(f"🔎 Checking if Item ID {item_id}, Instance ID {instance_id} is currently borrowed...")
+          print(f"🔎 Checking if Item ID {item_id}, Instance ID {instance_id} is currently borrowed...")
 
-            # Step 1: Find active checkout record
-            cursor.execute("""
-                SELECT checkoutId, dueDate FROM CheckoutRecord
-                WHERE instanceId = ? AND itemId = ? AND returnDate IS NULL;
-            """, (instance_id, item_id))
-            result = cursor.fetchone()
+          # Step 1: Find active checkout record
+          cursor.execute("""
+              SELECT checkoutId, dueDate FROM CheckoutRecord
+              WHERE instanceId = ? AND itemId = ? AND returnDate IS NULL;
+          """, (instance_id, item_id))
+          result = cursor.fetchone()
 
-            if not result:
-                print(f"Error: Item ID {item_id}, Instance ID {instance_id} is NOT currently checked out.")
-                return None
+          if not result:
+              print(f"Error: Item ID {item_id}, Instance ID {instance_id} is NOT currently checked out.")
+              return None
 
-            checkout_id, due_date = result
-            print(f"✅ Found active checkout: Checkout ID {checkout_id}, Due Date {due_date}")
+          checkout_id, due_date = result
+          print(f"✅ Found active checkout: Checkout ID {checkout_id}, Due Date {due_date}")
 
-            # Step 2: Mark the checkout record as returned
-            today = get_current_date()
-            cursor.execute("""
-                UPDATE CheckoutRecord
-                SET returnDate = ?
-                WHERE checkoutId = ?;
-            """, (today, checkout_id))
+          # Step 2: Mark the checkout record as returned
+          today = get_current_date()
+          cursor.execute("""
+              UPDATE CheckoutRecord
+              SET returnDate = ?
+              WHERE checkoutId = ?;
+          """, (today, checkout_id))
 
-            print(f"✅ Checkout ID {checkout_id} marked as returned on {today}")
+          print(f"✅ Checkout ID {checkout_id} marked as returned on {today}")
 
-            # Step 3: Update ItemInstance to make it available
-            cursor.execute("""
-                UPDATE ItemInstance
-                SET currentCheckoutId = NULL
-                WHERE instanceId = ? AND itemId = ?;
-            """, (instance_id, item_id))
+          # Step 3: Update ItemInstance to make it available
+          cursor.execute("""
+              UPDATE ItemInstance
+              SET currentCheckoutId = NULL
+              WHERE instanceId = ? AND itemId = ?;
+          """, (instance_id, item_id))
 
-            print(f"✅ Item ID {item_id}, Instance ID {instance_id} is now available for borrowing.")
+          print(f"✅ Item ID {item_id}, Instance ID {instance_id} is now available for borrowing.")
 
-            # Step 4: (Optional) Apply overdue fine if the item is returned late
-            cursor.execute("""
-                INSERT INTO OverdueFine (checkoutId, fineTotal, amountPaid, dateIssued)
-                SELECT ?, 
-                       (JULIANDAY(?) - JULIANDAY(dueDate)) * 0.50, 
-                       0, ?
-                FROM CheckoutRecord
-                WHERE checkoutId = ? AND ? > dueDate;
-            """, (checkout_id, today, today, checkout_id, today))
+          # Step 4: (Optional) Apply overdue fine if the item is returned late
+          cursor.execute("""
+              INSERT INTO OverdueFine (checkoutId, fineTotal, amountPaid, dateIssued)
+              SELECT ?, 
+                      (JULIANDAY(?) - JULIANDAY(dueDate)) * 0.50, 
+                      0, ?
+              FROM CheckoutRecord
+              WHERE checkoutId = ? AND ? > dueDate;
+          """, (checkout_id, today, today, checkout_id, today))
 
-            print("✅ Overdue fine checked (if applicable).")
-            print(f"✅ Return process completed for Item ID {item_id}, Instance ID {instance_id}.")
+          print("✅ Overdue fine checked (if applicable).")
+          print(f"✅ Return process completed for Item ID {item_id}, Instance ID {instance_id}.")
 
     except sqlite3.Error as e:
         print(f"Database error: {e}")
@@ -178,37 +182,39 @@ def donate_item(title:str, author:str, format:str, description:str, publish_date
     3. Adds a new instance of the item to `ItemInstance`.
     """
     try:
-        with sqlite3.connect(DB_PATH) as conn:
-            cursor = conn.cursor()
+      conn = sqlite3.connect(DB_PATH)
+      conn.execute("PRAGMA foreign_keys = ON;")
+      with conn:
+          cursor = conn.cursor()
 
-            print(f"🔎 Checking if '{title}' by {author} already exists in the library...")
+          print(f"🔎 Checking if '{title}' by {author} already exists in the library...")
 
-            # Step 1: Check if the item already exists
-            cursor.execute("""
-                SELECT itemId FROM Item 
-                WHERE title = ? AND author = ?;
-            """, (title, author))
-            result = cursor.fetchone()
+          # Step 1: Check if the item already exists
+          cursor.execute("""
+              SELECT itemId FROM Item 
+              WHERE title = ? AND author = ?;
+          """, (title, author))
+          result = cursor.fetchone()
 
-            if result:
-                item_id = result[0]
-                print(f"✅ Item already exists - Item ID {item_id}")
-            else:
-                # Step 2: Insert new item into Item table
-                cursor.execute("""
-                    INSERT INTO Item (title, author, format, description, publishDate, publisher)
-                    VALUES (?, ?, ?, ?, ?, ?);
-                """, (title, author, format, description, publish_date, publisher))
-                item_id = cursor.lastrowid
-                print(f"✅ New item added to library - Item ID {item_id}")
+          if result:
+              item_id = result[0]
+              print(f"✅ Item already exists - Item ID {item_id}")
+          else:
+              # Step 2: Insert new item into Item table
+              cursor.execute("""
+                  INSERT INTO Item (title, author, format, description, publishDate, publisher)
+                  VALUES (?, ?, ?, ?, ?, ?);
+              """, (title, author, format, description, publish_date, publisher))
+              item_id = cursor.lastrowid
+              print(f"✅ New item added to library - Item ID {item_id}")
 
-            # Step 3: Add a new instance to ItemInstance
-            cursor.execute("""
-                INSERT INTO ItemInstance (instanceId, itemId, currentCheckoutId)
-                VALUES ((SELECT COALESCE(MAX(instanceId), 0) + 1 FROM ItemInstance WHERE itemId = ?), ?, NULL);
-            """, (item_id, item_id))
+          # Step 3: Add a new instance to ItemInstance
+          cursor.execute("""
+              INSERT INTO ItemInstance (instanceId, itemId, currentCheckoutId)
+              VALUES ((SELECT COALESCE(MAX(instanceId), 0) + 1 FROM ItemInstance WHERE itemId = ?), ?, NULL);
+          """, (item_id, item_id))
 
-            print(f"✅ New copy of '{title}' added to library (Item ID {item_id})")
+          print(f"✅ New copy of '{title}' added to library (Item ID {item_id})")
 
     except sqlite3.Error as e:
         print(f"Database error: {e}")
@@ -223,34 +229,34 @@ def search_for_event(search_term):
     - Recommended Audience
     """
     try:
-        with sqlite3.connect(DB_PATH) as conn:
-            cursor = conn.cursor()
+      with sqlite3.connect(DB_PATH) as conn:
+          cursor = conn.cursor()
 
-            print("🔎 Searching for events...")
+          print("🔎 Searching for events...")
 
-            filters = [
-              'title',
-              'type',
-              'dateTimeStart',
-              'description'
-            ]
-            where_clause = " OR ".join([ "E." + filter + " LIKE :search" for filter in filters])
-            where_clause += " OR ER.audienceType LIKE :search"
+          filters = [
+            'title',
+            'type',
+            'dateTimeStart',
+            'description'
+          ]
+          where_clause = " OR ".join([ "E." + filter + " LIKE :search" for filter in filters])
+          where_clause += " OR ER.audienceType LIKE :search"
 
-            query = """
-                SELECT E.eventId, E.title, E.type, E.dateTimeStart, E.dateTimeEnd, S.name, ER.audienceType AS location
-                FROM Event E
-                LEFT JOIN SocialRoom S ON E.roomId = S.roomId
-                LEFT JOIN EventRecommendation ER ON E.eventId = ER.eventId
-                WHERE """ + where_clause + ';'
-            # Execute query
-            cursor.execute("PRAGMA case_sensitive_like = false;")
-            cursor.execute(query, {
-                'search': '%'+search_term+'%'
-              }
-            )
-            results = cursor.fetchall()
-            pretty_print(results)
+          query = """
+              SELECT E.eventId, E.title, E.type, E.dateTimeStart, E.dateTimeEnd, S.name, ER.audienceType AS location
+              FROM Event E
+              LEFT JOIN SocialRoom S ON E.roomId = S.roomId
+              LEFT JOIN EventRecommendation ER ON E.eventId = ER.eventId
+              WHERE """ + where_clause + ';'
+          # Execute query
+          cursor.execute("PRAGMA case_sensitive_like = false;")
+          cursor.execute(query, {
+              'search': '%'+search_term+'%'
+            }
+          )
+          results = cursor.fetchall()
+          pretty_print(results)
 
     except sqlite3.Error as e:
         print(f"Database error: {e}")
@@ -283,65 +289,67 @@ def register_for_event(member_id:int, event_id:int):
     5. Registers the member for the event.
     """
     try:
-        with sqlite3.connect(DB_PATH) as conn:
-            cursor = conn.cursor()
+      conn = sqlite3.connect(DB_PATH)
+      conn.execute("PRAGMA foreign_keys = ON;")
+      with conn:
+          cursor = conn.cursor()
 
-            print(f"🔎 Checking if Event ID {event_id} exists...")
+          print(f"🔎 Checking if Event ID {event_id} exists...")
 
-            # Step 1: Verify event exists
-            cursor.execute("SELECT eventId, roomId FROM Event WHERE eventId = ?;", (event_id,))
-            event = cursor.fetchone()
-            if not event:
-                print(f"Error: Event ID {event_id} does not exist.")
-                return None
+          # Step 1: Verify event exists
+          cursor.execute("SELECT eventId, roomId FROM Event WHERE eventId = ?;", (event_id,))
+          event = cursor.fetchone()
+          if not event:
+              print(f"Error: Event ID {event_id} does not exist.")
+              return None
 
-            room_id = event[1]
-            print(f"✅ Event ID {event_id} found, located in Room {room_id}.")
+          room_id = event[1]
+          print(f"✅ Event ID {event_id} found, located in Room {room_id}.")
 
-            print(f"🔎 Checking if Member ID {member_id} exists...")
+          print(f"🔎 Checking if Member ID {member_id} exists...")
 
-            # Step 2: Verify member exists
-            cursor.execute("SELECT memberId FROM Member WHERE memberId = ?;", (member_id,))
-            if not cursor.fetchone():
-                print(f"Error: Member ID {member_id} does not exist.")
-                return None
+          # Step 2: Verify member exists
+          cursor.execute("SELECT memberId FROM Member WHERE memberId = ?;", (member_id,))
+          if not cursor.fetchone():
+              print(f"Error: Member ID {member_id} does not exist.")
+              return None
 
-            print(f"✅ Member ID {member_id} found.")
+          print(f"✅ Member ID {member_id} found.")
 
-            print(f"🔎 Checking if Member ID {member_id} is already registered for Event ID {event_id}...")
+          print(f"🔎 Checking if Member ID {member_id} is already registered for Event ID {event_id}...")
 
-            # Step 3: Check if already registered
-            cursor.execute("SELECT * FROM EventAttendance WHERE memberId = ? AND eventId = ?;", (member_id, event_id))
-            if cursor.fetchone():
-                print(f"Error: Member ID {member_id} is already registered for Event ID {event_id}.")
-                return None
+          # Step 3: Check if already registered
+          cursor.execute("SELECT * FROM EventAttendance WHERE memberId = ? AND eventId = ?;", (member_id, event_id))
+          if cursor.fetchone():
+              print(f"Error: Member ID {member_id} is already registered for Event ID {event_id}.")
+              return None
 
-            print(f"✅ Member is not yet registered. Proceeding with registration.")
+          print(f"✅ Member is not yet registered. Proceeding with registration.")
 
-            # Step 4: (Optional) Check if event room capacity is full
-            cursor.execute("""
-                SELECT S.capacity, COUNT(EA.memberId)
-                FROM EventAttendance EA
-                JOIN Event E ON EA.eventId = E.eventId
-                JOIN SocialRoom S ON E.roomId = S.roomId
-                WHERE E.eventId = ?
-                GROUP BY S.capacity;
-            """, (event_id,))
-            capacity_check = cursor.fetchone()
+          # Step 4: (Optional) Check if event room capacity is full
+          cursor.execute("""
+              SELECT S.capacity, COUNT(EA.memberId)
+              FROM EventAttendance EA
+              JOIN Event E ON EA.eventId = E.eventId
+              JOIN SocialRoom S ON E.roomId = S.roomId
+              WHERE E.eventId = ?
+              GROUP BY S.capacity;
+          """, (event_id,))
+          capacity_check = cursor.fetchone()
 
-            if capacity_check:
-                room_capacity, current_attendees = capacity_check
-                if current_attendees >= room_capacity:
-                    print(f"Error: Event ID {event_id} has reached full capacity ({room_capacity} attendees).")
-                    return None
+          if capacity_check:
+              room_capacity, current_attendees = capacity_check
+              if current_attendees >= room_capacity:
+                  print(f"Error: Event ID {event_id} has reached full capacity ({room_capacity} attendees).")
+                  return None
 
-            # Step 5: Register the member for the event
-            cursor.execute("""
-                INSERT INTO EventAttendance (eventId, memberId)
-                VALUES (?, ?);
-            """, (event_id, member_id))
+          # Step 5: Register the member for the event
+          cursor.execute("""
+              INSERT INTO EventAttendance (eventId, memberId)
+              VALUES (?, ?);
+          """, (event_id, member_id))
 
-            print(f"✅ Registration successful: Member ID {member_id} is now registered for Event ID {event_id}.")
+          print(f"✅ Registration successful: Member ID {member_id} is now registered for Event ID {event_id}.")
 
     except sqlite3.Error as e:
         print(f"Database error: {e}")
@@ -366,7 +374,9 @@ def register_member_as_volunteer(member_id: int):
   Step 3: Display the member's Personnel ID.
   """
   current_date = get_current_date()
-  with sqlite3.connect(DB_PATH) as conn:
+  conn = sqlite3.connect(DB_PATH)
+  conn.execute("PRAGMA foreign_keys = ON;")
+  with conn:
     cursor = conn.cursor()
     
     if _find_personnel_id_by_member_id(member_id) is not None:
@@ -431,6 +441,7 @@ def post_question(member_id: int, question: str):
   current_date = get_current_date()
   try:
     conn = sqlite3.connect(DB_PATH)
+    conn.execute("PRAGMA foreign_keys = ON;")
     with conn:
       conn.execute("""
         INSERT INTO HelpQuestion (
@@ -453,6 +464,7 @@ def post_answer(question_id:int, personnel_id: int, answer: str):
   current_date = get_current_date()
   try:
     conn = sqlite3.connect(DB_PATH)
+    conn.execute("PRAGMA foreign_keys = ON;")
     with conn:
       conn.execute("""
         INSERT INTO HelpAnswer (

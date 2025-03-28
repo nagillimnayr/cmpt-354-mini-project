@@ -72,8 +72,7 @@ def create_views():
 
 
 def create_triggers():
-  conn = sqlite3.connect(DB_PATH) 
-  with conn:
+  with sqlite3.connect(DB_PATH) as conn:
     cursor = conn.cursor()
     """
     We can't use subqueries inside `CHECK` or `ASSERTION` statements, so we must
@@ -154,6 +153,7 @@ def create_triggers():
       END;
     """)
     
+    
 
 def create_database():
   create_tables()
@@ -174,7 +174,6 @@ def insert_sample_data():
         command = file.read()
         cursor.execute(command)
   
-    
 
 if __name__ == '__main__':
   try:

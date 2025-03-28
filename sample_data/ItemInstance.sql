@@ -1,17 +1,17 @@
-INSERT INTO ItemInstance (itemId, instanceId, currentCheckoutId) 
+INSERT INTO ItemInstance (itemId, instanceId) 
 VALUES
-  (1,  1, NULL), -- The Great Gatsby, available
-  (1,  2, NULL), -- The Great Gatsby, second copy
-  (2,  1, NULL), -- Inception, available
-  (3,  1, NULL), -- National Geographic - July Edition, available
-  (4,  1, NULL), -- Python Programming, available
-  (5,  1, NULL), -- Beethoven Symphony No.9, available
-  (6,  1, NULL), -- To Kill a Mockingbird, available
-  (7,  1, NULL), -- The Lord of the Rings, available
-  (8,  1, NULL), -- 1984, available
-  (9,  1, NULL), -- The Matrix, available
-  (10, 1, NULL), -- Interstellar, available
-  (11, 1, NULL), -- Dune, available
-  (12, 1, NULL), -- The Catcher in the Rye, available
-  (13, 1, NULL), -- Cosmos, available
-  (14, 1, NULL); -- The Art of War, available
+  (1,  1), -- The Great Gatsby
+  (1,  2), -- The Great Gatsby
+  (2,  1), -- Inception
+  (3,  1), -- National Geographic - July Edition
+  (4,  1), -- Python Programming
+  (5,  1), -- Beethoven Symphony No.9
+  (6,  1), -- To Kill a Mockingbird
+  (7,  1), -- The Lord of the Rings
+  (8,  1), -- 1984
+  (9,  1), -- The Matrix
+  (10, 1), -- Interstellar
+  (11, 1), -- Dune
+  (12, 1), -- The Catcher in the Rye
+  (13, 1), -- Cosmos
+  (14, 1); -- The Art of War
