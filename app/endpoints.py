@@ -10,6 +10,10 @@ def get_all_members():
 def get_all_items():
     return get_items_list()
 
+@app.get('/instances')
+def get_all_item_instances():
+    return get_item_instances_list()
+
 @app.get('/personnel')
 def get_all_personnel():
     return get_personnel_list()

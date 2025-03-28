@@ -139,6 +139,25 @@ def create_triggers():
           instanceId = NEW.instanceId;
       END;
     """)
+    
+    """
+    Trigger to set `ItemInstance`'s `currentCheckoutRecord` to `NULL` when an 
+    item is returned. 
+    """
+    cursor.execute("""
+      CREATE TRIGGER IF NOT EXISTS nullify_current_checkout_id 
+      AFTER UPDATE ON CheckoutRecord
+      WHEN 
+        NEW.returnDate IS NOT NULL
+      BEGIN 
+        UPDATE ItemInstance
+        SET currentCheckoutId = NULL
+        WHERE 
+          itemId = NEW.itemId 
+          AND
+          instanceId = NEW.instanceId;
+      END;
+    """)
 
 def create_database():
   create_tables()
