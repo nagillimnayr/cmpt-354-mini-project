@@ -51,7 +51,7 @@ def find_item_by_id(item_id: int):
   return result
 
 # Borrow item
-def borrow_item(member_id:int, item_id:int, librarian_id:int):
+def borrow_item(member_id:int, item_id:int):
     """
     Handles borrowing an item:
     1. Checks for available copies.
@@ -84,9 +84,9 @@ def borrow_item(member_id:int, item_id:int, librarian_id:int):
             due_date = (datetime.now() + timedelta(days=14)).strftime("%Y-%m-%d")
 
             cursor.execute("""
-                INSERT INTO CheckoutRecord (memberId, itemId, instanceId, personnelId, checkoutDate, dueDate, returnDate)
-                VALUES (?, ?, ?, ?, ?, ?, NULL);
-            """, (member_id, item_id, instance_id, librarian_id, checkout_date, due_date))
+                INSERT INTO CheckoutRecord (memberId, itemId, instanceId, checkoutDate, dueDate, returnDate)
+                VALUES (?, ?, ?, ?, ?, NULL);
+            """, (member_id, item_id, instance_id, checkout_date, due_date))
 
             checkout_id = cursor.lastrowid  # Retrieve the newly inserted checkoutId
             print(f"✅ Step 2: Created checkout record - Checkout ID {checkout_id}, Due Date {due_date}")

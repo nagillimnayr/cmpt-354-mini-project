@@ -78,11 +78,7 @@ while uInput not in ['q', 'quit', 'kill']:
                     if iId == 'b': break 
                     while not iId.isdigit(): itemId = input('\nInvalid itemId, enter again: ')
 
-                    lId = input('Librarian Id: ')
-                    if lId == 'b': break 
-                    while not lId.isdigit(): lId = input('\nInvalid librarianId, enter again: ')
-
-                    _db_functions.borrow_item(mId, iId, lId)
+                    _db_functions.borrow_item(mId, iId)
 
                     con = input('Would you like to borrow another item? (y/n): ').strip().lower()
                     if con == 'n': break 

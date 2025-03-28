@@ -3,12 +3,10 @@ CREATE TABLE IF NOT EXISTS CheckoutRecord (
     memberId INTEGER NOT NULL,
     itemId INTEGER NOT NULL,
     instanceId INTEGER NOT NULL,
-    personnelId INTEGER NOT NULL,
     checkoutDate DATE NOT NULL,
     dueDate DATE NOT NULL,
     returnDate DATE,
 
     FOREIGN KEY (memberId) REFERENCES Member(memberId),
-    FOREIGN KEY (instanceId, itemId) REFERENCES ItemInstance(instanceId, itemId),
-    FOREIGN KEY (personnelId) REFERENCES Personnel(personnelId)
+    FOREIGN KEY (instanceId, itemId) REFERENCES ItemInstance(instanceId, itemId)
 );
