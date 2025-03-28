@@ -8,6 +8,7 @@ def get_item_instances_list():
     cursor = conn.cursor()
     cursor.execute("""
       SELECT * 
-      FROM ItemInstance;
+      FROM ItemInstance
+      ORDER BY itemId, instanceId;
     """)
     return cursor.fetchall()

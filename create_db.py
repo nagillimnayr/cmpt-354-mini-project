@@ -135,7 +135,6 @@ def create_triggers():
       END;
     """)
     
-    
     """
     Trigger to set `ItemInstance`'s `currentCheckoutRecord` to `NULL` when an 
     item is returned. 
