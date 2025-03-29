@@ -1,7 +1,5 @@
-import _db_functions
 from datetime import datetime
 
-from _db_functions import *
 from db_functions import *
 
 KEYWORDS = ['fnditm', 'finditem', 'brw', 'borrowitem', 'rtn', 'returnitem', 'dnt', 'donate', 'fndevt', 'findevent', 'reg', 'register', 'vlt', 'volunteer', 'qst', 'questions']
@@ -78,12 +76,19 @@ while uInput not in ['q', 'quit', 'kill']:
                             sTerm = input('Search Term: ')
                             if sTerm == 'b': break
 
-                            search_for_item(sTerm)
+                            results = search_for_item(sTerm)
+                            if len(results) == 0: print("No items found.")
+                            else: 
+                              print('\nItems found:\n')
+                              print_items_list(results)
                         case 'i':
                             iId = input('Item Id: ')
                             if iId == 'b': break
                             
-                            find_item_by_id(iId)
+                            result = find_item_by_id(int(iId))
+                            if result is None: print("No item found.")
+                            else: print_item(result)
+                            
                     con = input('Would you like to search for another item? (y/n): ').strip().lower()
                     if con == 'n': break
                     elif not con == 'y': con = input('Invalid entry (y/n): ').strip().lower()
@@ -97,7 +102,7 @@ while uInput not in ['q', 'quit', 'kill']:
                     if iId == 'b': break 
                     while not iId.isdigit(): itemId = input('\nInvalid itemId, enter again: ')
 
-                    _db_functions.borrow_item(mId, iId)
+                    borrow_item(int(mId), int(iId))
 
                     con = input('Would you like to borrow another item? (y/n): ').strip().lower()
                     if con == 'n': break 
@@ -112,7 +117,7 @@ while uInput not in ['q', 'quit', 'kill']:
                     if instanceId == 'b': break 
                     while not instanceId.isdigit(): instanceId = input('\nInvalid itemId, enter again: ')
 
-                    _db_functions.return_item(itemId, instanceId)
+                    return_item(int(itemId), int(instanceId))
 
                     con = input('Would you like to return another item? (y/n): ').strip().lower()
                     if con == 'n': break 
@@ -150,7 +155,7 @@ while uInput not in ['q', 'quit', 'kill']:
                     if publisher == 'b': break
                     while len(publisher) == 0: publisher = input('Invalid publisher: ') 
 
-                    _db_functions.donate_item(title, author, format, description, publishDate, publisher)
+                    donate_item(title, author, format, description, publishDate, publisher)
 
                     con = input('Would you like to donate another item? (y/n): ').strip().lower()
                     if con == 'n': break 
@@ -164,12 +169,12 @@ while uInput not in ['q', 'quit', 'kill']:
                             sTerm = input('Search Term: ')
                             if sTerm == 'b': break
 
-                            _db_functions.search_for_event(sTerm)
+                            search_for_event(sTerm)
                         case 'i':
                             eId = input('Event Id: ')
                             if eId == 'b': break
                             
-                            _db_functions.find_event_by_id(eId)
+                            find_event_by_id(int(eId))
                     con = input('Would you like to search for another event? (y/n): ').strip().lower()
                     if con == 'n': break 
                     elif not con == 'y': con = input('Invalid entry (y/n): ').strip().lower()  
@@ -183,7 +188,7 @@ while uInput not in ['q', 'quit', 'kill']:
                     if eId == 'b': break
                     while not eId.isdigit(): eId = input('\nInvalid eventId, enter again: ')
 
-                    _db_functions.register_for_event(mId, eId)
+                    register_for_event(int(mId), int(eId))
 
                     con = input('Would you like to search for another event? (y/n): ').strip().lower()
                     if con == 'n': break 
@@ -194,7 +199,7 @@ while uInput not in ['q', 'quit', 'kill']:
                     if mId == 'b': break
                     while not mId.isdigit(): mId = input('\nInvalid memberId, enter again: ')
 
-                    _db_functions.register_member_as_volunteer(mId)
+                    register_member_as_volunteer(int(mId))
 
                     con = input('Would you like to register another member? (y/n): ').strip().lower()
                     if con == 'n': break 
@@ -210,15 +215,15 @@ while uInput not in ['q', 'quit', 'kill']:
                     choice = input('Enter choice: ')
                     match choice:
                         case 'q':
-                            questions = _db_functions.get_questions()
+                            questions = get_questions()
                         case 'qa':
-                            questionsAndAnswers = _db_functions.get_questions_with_answers()
+                            questionsAndAnswers = get_questions_with_answers()
                         case 'sq':
                             qId = input('Question Id: ')
                             if (qId == 'b'): break
                             while not qId.isdigit(): qId = input('Invalid questionId, enter again: ')
 
-                            answers = _db_functions.get_answers_to_question(qId)        
+                            answers = get_answers_to_question(qId)        
                         case 'p':
                             mId = input('Member Id: ')
                             if (mId == 'b'): break
@@ -228,7 +233,7 @@ while uInput not in ['q', 'quit', 'kill']:
                             if (question == 'b'): break
                             while len(question) == 0: question = input("Blank question, enter again: ")
 
-                            _db_functions.post_question(mId, question)
+                            post_question(mId, question)
                         case 'aq':
                             qId = input('Question Id: ')
                             if (qId == 'b'): break
@@ -242,7 +247,7 @@ while uInput not in ['q', 'quit', 'kill']:
                             if (answer == 'b'): break
                             while len(answer) == 0: answer = input("Blank answer, enter again: ")
 
-                            _db_functions.post_answer(qId, pId, answer)
+                            post_answer(qId, pId, answer)
             case _:
                 print('base case')
 

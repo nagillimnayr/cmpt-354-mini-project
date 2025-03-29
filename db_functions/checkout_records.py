@@ -7,14 +7,11 @@ from utils import *
 
 
 def get_all_checkout_records_list():
-  with sqlite3.connect(DB_PATH) as conn:
-    conn.row_factory = dict_row_factory
-    cursor = conn.cursor()
-    cursor.execute("""
+  with connect_to_db() as conn:
+    return conn.execute("""
       SELECT * 
       FROM CheckoutRecord;
-    """)
-    return cursor.fetchall()
+    """).fetchall()
   
 
 def borrow_item(member_id: int, item_id: int):
@@ -25,9 +22,7 @@ def borrow_item(member_id: int, item_id: int):
   3. Updates ItemInstance to mark the item as checked out.
   """
   try:
-    conn = connect_to_db()
-    conn.execute("PRAGMA foreign_keys = ON;")
-    with conn:
+    with connect_to_db() as conn:
       cursor = conn.cursor()
 
       print(f"🔎 Checking for available copies of Item ID {item_id}...")
@@ -67,7 +62,7 @@ def borrow_item(member_id: int, item_id: int):
       
       print(f"✅ Step 2: Created checkout record - Checkout ID {checkout_id}, Due Date {due_date}")
 
-      instance = select_item_instance(conn, item_id, instance_id)
+      instance = select_item_instance(item_id, instance_id)
       
       assert instance['currentCheckoutId'] == checkout_id
 
@@ -88,9 +83,7 @@ def return_item(item_id:int, instance_id:int):
   4. (Optional) Applies a fine if the item is overdue.
   """
   try:
-    conn = connect_to_db()
-    conn.execute("PRAGMA foreign_keys = ON;")
-    with conn:
+    with connect_to_db() as conn:
       cursor = conn.cursor()
 
       print(f"🔎 Checking if Item ID {item_id}, Instance ID {instance_id} is currently borrowed...")

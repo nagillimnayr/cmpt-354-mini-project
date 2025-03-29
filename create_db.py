@@ -7,32 +7,31 @@ from utils import *
 
 def get_all_table_names():
   with connect_to_db() as conn:
-    cursor = conn.cursor()
-    cursor.execute(
+    tables = conn.execute(
       """
       SELECT name 
       FROM sqlite_master 
       WHERE type='table';
       """
-    )
-    tables = cursor.fetchall()
+    ).fetchall()
     return [table['name'] for table in tables]
 
 
 def drop_all_tables():
   table_names = get_all_table_names()
+  pretty_print(table_names)
   with connect_to_db() as conn:
-    cursor = conn.cursor()
+    conn.execute("PRAGMA foreign_keys = OFF;")
     for table_name in table_names:
       print(f"Dropping Table: {table_name}")
-      cursor.execute("DROP TABLE IF EXISTS " + table_name + ";" )
+      conn.execute("DROP TABLE IF EXISTS " + table_name + ";" )
 
 
-def execute_sql_in_directory(dir_name: str):
+def execute_sql_in_directory(dir_name: str, conn: sqlite3.Connection = connect_to_db()):
   """
   Reads all .sql files from a directory and executes the commands within.
   """
-  with connect_to_db() as conn:
+  with conn:
     cursor = conn.cursor()
     files = os.listdir(dir_name)
     for file_name in files:
@@ -68,7 +67,9 @@ def create_database():
 
 def create_sample_data():
   print("--------------------- Creating Data ---------------------")
-  execute_sql_in_directory('sample_data')
+  conn = connect_to_db()
+  conn.execute("PRAGMA foreign_keys = OFF;")
+  execute_sql_in_directory('sample_data', conn)
 
 
 if __name__ == '__main__':

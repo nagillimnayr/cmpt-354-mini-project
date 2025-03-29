@@ -13,10 +13,9 @@ def get_item_instances_list():
     return cursor.fetchall()
 
 
-def select_item_instance(conn: sqlite3.Connection, item_id: int, instance_id: int):
-  with conn:
-    cursor = conn.cursor()
-    cursor.execute("""
+def select_item_instance(item_id: int, instance_id: int):
+  with connect_to_db() as conn:
+    return conn.execute("""
       SELECT * 
       FROM ItemInstance
       WHERE
@@ -26,5 +25,4 @@ def select_item_instance(conn: sqlite3.Connection, item_id: int, instance_id: in
     """, {
       'item_id': item_id,
       'instance_id': instance_id,
-    })
-    return cursor.fetchone()
+    }).fetchone()
