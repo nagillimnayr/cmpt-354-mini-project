@@ -47,13 +47,16 @@ def find_event_by_id(event_id: int):
   try:
     with connect_to_db() as conn:
       cursor = conn.cursor()
-      cursor.execute("""
-        SELECT E.eventId, E.title, E.type, E.dateTimeStart, E.dateTimeEnd, S.name AS location
+      cursor.execute(
+        """
+          SELECT E.eventId, E.title, E.type, E.dateTimeStart, E.dateTimeEnd, S.name AS location
           FROM Event E
           LEFT JOIN SocialRoom S ON E.roomId = S.roomId
           LEFT JOIN EventRecommendation ER ON E.eventId = ER.eventId
           WHERE E.eventId = ?;
-        """, (event_id,))
+        """, 
+        (event_id,)
+      )
       result = cursor.fetchall()
       pretty_print(result)
 
@@ -107,14 +110,17 @@ def register_for_event(member_id:int, event_id:int):
       print(f"✅ Member is not yet registered. Proceeding with registration.")
 
       # Step 4: (Optional) Check if event room capacity is full
-      cursor.execute("""
+      cursor.execute(
+        """
         SELECT S.capacity, COUNT(EA.memberId)
         FROM EventAttendance EA
         JOIN Event E ON EA.eventId = E.eventId
         JOIN SocialRoom S ON E.roomId = S.roomId
         WHERE E.eventId = ?
         GROUP BY S.capacity;
-      """, (event_id,))
+        """, 
+        (event_id,)
+      )
       capacity_check = cursor.fetchone()
 
       if capacity_check:
@@ -124,10 +130,13 @@ def register_for_event(member_id:int, event_id:int):
           return None
 
       # Step 5: Register the member for the event
-      cursor.execute("""
+      cursor.execute(
+        """
         INSERT INTO EventAttendance (eventId, memberId)
         VALUES (?, ?);
-      """, (event_id, member_id))
+        """, 
+        (event_id, member_id)
+      )
 
       print(f"✅ Registration successful: Member ID {member_id} is now registered for Event ID {event_id}.")
 
