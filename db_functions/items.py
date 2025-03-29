@@ -3,18 +3,14 @@ from constants import *
 from utils import *
 
 def get_items_list():
-  with sqlite3.connect(DB_PATH) as conn:
-    conn.row_factory = dict_row_factory
-    cursor = conn.cursor()
-    cursor.execute("""
+  with connect_to_db() as conn:
+    return conn.execute("""
       SELECT * 
       FROM Item 
       ORDER BY 
         format ASC,
         title ASC;
-    """)
-    
-    return cursor.fetchall()
+    """).fetchall()
 
 def format_item(item: dict) -> str:
   """
@@ -63,14 +59,12 @@ def search_for_item(search_term: str):
     FROM Item
     WHERE """ + where_clause + ";"
 
-  with sqlite3.connect(DB_PATH) as conn:
-    cursor = conn.cursor()
-    cursor.execute("PRAGMA case_sensitive_like = false;")
-    cursor.execute(query, {
+  with connect_to_db() as conn:
+    conn.execute("PRAGMA case_sensitive_like = false;")
+    return conn.execute(query, {
         'search': '%'+search_term+'%'
       }
-    )
-    return cursor.fetchall()
+    ).fetchall()
 
 def find_item_by_id(item_id: int):
   query = """
@@ -79,9 +73,7 @@ def find_item_by_id(item_id: int):
     WHERE Item.itemId = ?;
   """
   with connect_to_db() as conn:
-    cursor = conn.cursor()
-    cursor.execute(query, (item_id,))
-    return cursor.fetchone()
+    return conn.execute(query, (item_id,)).fetchone()
 
 
 def donate_item(title:str, author:str, format:str, description:str, publish_date: str, publisher:str):
@@ -92,9 +84,7 @@ def donate_item(title:str, author:str, format:str, description:str, publish_date
   3. Adds a new instance of the item to `ItemInstance`.
   """
   try:
-    conn = sqlite3.connect(DB_PATH)
-    conn.execute("PRAGMA foreign_keys = ON;")
-    with conn:
+    with connect_to_db() as conn:
       cursor = conn.cursor()
 
       print(f"🔎 Checking if '{title}' by {author} already exists in the library...")
