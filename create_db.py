@@ -68,92 +68,12 @@ def create_tables():
     
     
 def create_views():
-    execute_sql_in_directory('views')
+  execute_sql_in_directory('views')
 
 
 def create_triggers():
-  with sqlite3.connect(DB_PATH) as conn:
-    cursor = conn.cursor()
-    """
-    We can't use subqueries inside `CHECK` or `ASSERTION` statements, so we must
-    use a `TRIGGER` to impose constraint on number of `OverdueFine`s for a single
-    `CheckoutRecord`.
-    """
-    cursor.execute("""
-      CREATE TRIGGER IF NOT EXISTS max_overdue_fines_per_checkout 
-      BEFORE INSERT ON OverdueFine 
-      WHEN (
-          SELECT COUNT(*)
-          FROM OverdueFine AS O
-          WHERE O.checkoutId = NEW.checkoutId
-        ) >= 10
-      BEGIN
-          SELECT 
-          RAISE (ABORT, 'Maximum number of fines reached for this Checkout');
-      END;
-      """
-    )
-    
-    """
-    Trigger to prevent checking out an `ItemInstance` that is already
-    checked out.
-    """
-    cursor.execute("""
-      CREATE TRIGGER IF NOT EXISTS prevent_checkout_of_checked_out_item_instance 
-      BEFORE INSERT ON CheckoutRecord
-      WHEN (
-        SELECT currentCheckoutId 
-        FROM ItemInstance
-        WHERE 
-          itemId = NEW.itemId 
-          AND
-          instanceId = NEW.instanceId
-      ) IS NOT NULL
-      BEGIN 
-        SELECT 
-        RAISE (ABORT, 'ItemInstance is already checked out');
-      END;
-    """)
-    
-    """ 
-    Trigger to set `currentCheckoutId` for `ItemInstance` when a new 
-    `CheckoutRecord` is inserted.
-    """
-    cursor.execute("""
-      CREATE TRIGGER IF NOT EXISTS set_current_checkout_id 
-      AFTER INSERT ON CheckoutRecord
-      WHEN 
-        NEW.returnDate IS NULL        
-      BEGIN 
-        UPDATE ItemInstance
-        SET currentCheckoutId = NEW.checkoutId
-        WHERE 
-          itemId = NEW.itemId 
-          AND
-          instanceId = NEW.instanceId;
-      END;
-    """)
-    
-    """
-    Trigger to set `ItemInstance`'s `currentCheckoutRecord` to `NULL` when an 
-    item is returned. 
-    """
-    cursor.execute("""
-      CREATE TRIGGER IF NOT EXISTS nullify_current_checkout_id 
-      AFTER UPDATE ON CheckoutRecord
-      WHEN 
-        NEW.returnDate IS NOT NULL
-      BEGIN 
-        UPDATE ItemInstance
-        SET currentCheckoutId = NULL
-        WHERE 
-          itemId = NEW.itemId 
-          AND
-          instanceId = NEW.instanceId;
-      END;
-    """)
-    
-    
+  execute_sql_in_directory('triggers')
+
 
 def create_database():
   create_tables()
