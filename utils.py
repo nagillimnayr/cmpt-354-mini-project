@@ -14,7 +14,7 @@ def dict_row_factory(cursor, row):
 def connect_to_db() -> sqlite3.Connection:
   conn = sqlite3.connect(DB_PATH, detect_types=sqlite3.PARSE_DECLTYPES)
   conn.row_factory = dict_row_factory
-  conn.execute("PRAGMA foreign_keys ON;")
+  conn.execute("PRAGMA foreign_keys = ON;")
   return conn
 
 def pretty_print(obj):
