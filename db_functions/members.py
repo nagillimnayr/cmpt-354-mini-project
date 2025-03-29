@@ -12,7 +12,17 @@ def get_members_list():
     """)
     
     return cursor.fetchall()
-
+  
+def get_member_ids():
+  with sqlite3.connect(DB_PATH) as conn:
+    cursor = conn.cursor()
+    cursor.execute("""
+      SELECT memberId
+      FROM Member;
+    """)
+    
+    rows = cursor.fetchall()
+    return [row[0] for row in rows]
 
 def format_member(member: dict):
   """
