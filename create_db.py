@@ -5,48 +5,28 @@ from constants import DB_PATH
 from utils import *
 
 
-TABLES = [
-  'Audience',
-  'CheckoutRecord',
-  'Event',
-  'EventAttendance',
-  'EventRecommendation',
-  'HelpAnswer',
-  'HelpQuestion',
-  'Item',
-  'ItemInstance',
-  'Member',
-  'MemberAudienceType',
-  'OverdueFine',
-  'Personnel',
-  'SocialRoom',
-]
-DROP_TABLE_COMMANDS = ["DROP TABLE IF EXISTS " + table + ";" for table in TABLES]
-
-def drop_tables():
-  with sqlite3.connect(DB_PATH) as conn:
+def get_all_table_names():
+  with connect_to_db() as conn:
     cursor = conn.cursor()
-    for cmd in DROP_TABLE_COMMANDS:
-      cursor.execute(cmd)
+    cursor.execute(
+      """
+      SELECT name 
+      FROM sqlite_master 
+      WHERE type='table';
+      """
+    )
+    tables = cursor.fetchall()
+    return [table['name'] for table in tables]
 
-VIEWS = [
-  'HelpAnswerView',
-  'HelpQuestionView',
-  'PersonnelInfo',
-  'PersonnelView',
-]   
-DROP_VIEW_COMMANDS = ["DROP VIEW IF EXISTS " + view + ";" for view in VIEWS]
 
-def drop_views():
-  with sqlite3.connect(DB_PATH) as conn:
+def drop_all_tables():
+  table_names = get_all_table_names()
+  with connect_to_db() as conn:
     cursor = conn.cursor()
-    for cmd in DROP_VIEW_COMMANDS:
-      cursor.execute(cmd)
+    for table_name in table_names:
+      print(f"Dropping Table: {table_name}")
+      cursor.execute("DROP TABLE IF EXISTS " + table_name + ";" )
 
-def drop_all():
-  drop_tables()    
-  drop_views()
-  
 
 def execute_sql_in_directory(dir_name: str):
   """
@@ -57,15 +37,15 @@ def execute_sql_in_directory(dir_name: str):
     cursor = conn.cursor()
     files = os.listdir(dir_name)
     for file_name in files:
-      with open(f'{dir_name}/{file_name}') as file:
-        print(f"Attempting to Execute {file_name}")
+      path = f'{dir_name}/{file_name}'
+      with open(path) as file:
+        print(f"Attempting to Execute {path}")
         command = file.read()
         cursor.execute(command)
-        print(f"Successfully Executed {file_name}")
+        print(f"Successfully Executed {path}")
 
 
 def create_tables():
-  
   print("---------------------- Creating Tables ----------------------")
   execute_sql_in_directory('schemas')
     
@@ -85,32 +65,32 @@ def create_database():
   create_views()
   create_triggers()
 
+
 def insert_sample_data():
   """ 
-  Reads in SQL INSERT commands from files and executes them. 
-  Commands need to be executed in a specific order.
+  # Reads in SQL INSERT commands from files and executes them. 
   """
-  
   print("--------------------- Inserting Data ---------------------")
-  with sqlite3.connect(DB_PATH) as conn:
-    cursor = conn.cursor()
-    dir = 'sample_data'
-    file_names = os.listdir(dir)
-    for file_name in file_names:
-      with open(f'{dir}/{file_name}') as file:
-        print(f"Attempting to Execute {file_name}")
-        command = file.read()
-        cursor.execute(command)
-        print(f"Successfully Executed {file_name}")
-  
+  execute_sql_in_directory('sample_data/insert')
+
+def update_sample_data():
+  """
+  This sample data is added to the database via UPDATE rather than INSERT
+  so that we can take advantage of our triggers to handle automating 
+  certain tasks.
+  """
+  print("--------------------- Updating Data ---------------------")
+  execute_sql_in_directory('sample_data/update')
+
+def create_sample_data():
+  insert_sample_data()
+  update_sample_data()
 
 if __name__ == '__main__':
   try:
-    drop_all()
+    drop_all_tables()
     create_database()
-    insert_sample_data()
-      
-      
+    create_sample_data()
     
   except sqlite3.Error as e:
     print(e)
