@@ -4,23 +4,24 @@ from utils import *
 
 def get_personnel_list():
   with connect_to_db() as conn:
-    cursor = conn.cursor()
-    cursor.execute("""
+    return conn.execute(
+      """
       SELECT * 
       FROM PersonnelView;
-    """)
-    return cursor.fetchall()
+      """
+    ).fetchall()
   
   
 def find_personnel_id_by_member_id(member_id: int):
   with connect_to_db() as conn:
-    cursor = conn.cursor()
-    cursor.execute("""
+    return conn.execute(
+      """
       SELECT personnelId 
       FROM Personnel
       WHERE Personnel.memberId = ?;
-    """, (member_id,))
-    return cursor.fetchone()
+      """, 
+      (member_id,)
+    ).fetchone()
   
 def register_member_as_volunteer(member_id: int):
   """
@@ -29,21 +30,22 @@ def register_member_as_volunteer(member_id: int):
   Step 2: Register the member as a part of personnel.
   Step 3: Display the member's Personnel ID.
   """
-  conn = connect_to_db()
-  conn.execute("PRAGMA foreign_keys = ON;")
-  with conn:
+  with connect_to_db() as conn:
     cursor = conn.cursor()
     
     if find_personnel_id_by_member_id(member_id) is not None:
       print(f"Error: Member with ID: {member_id} is already library personnel.")
       return
     
-    cursor.execute("""
+    cursor.execute(
+      """
       INSERT INTO Personnel (memberId, role, dateJoined, salary) 
       VALUES (:memberId, "Volunteer", DATE(current_date, 'localtime'), NULL);
-      """, {
-      'memberId': member_id,
-    })
+      """, 
+      { 
+       'memberId': member_id,
+      }
+    )
     
     result = find_personnel_id_by_member_id(member_id)
     if result is not None:

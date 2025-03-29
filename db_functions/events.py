@@ -11,7 +11,7 @@ def search_for_event(search_term):
   - Recommended Audience
   """
   try:
-    with sqlite3.connect(DB_PATH) as conn:
+    with connect_to_db() as conn:
       cursor = conn.cursor()
 
       print("🔎 Searching for events...")
@@ -45,7 +45,7 @@ def search_for_event(search_term):
 
 def find_event_by_id(event_id: int):
   try:
-    with sqlite3.connect(DB_PATH) as conn:
+    with connect_to_db() as conn:
       cursor = conn.cursor()
       cursor.execute("""
         SELECT E.eventId, E.title, E.type, E.dateTimeStart, E.dateTimeEnd, S.name AS location
@@ -71,9 +71,7 @@ def register_for_event(member_id:int, event_id:int):
   5. Registers the member for the event.
   """
   try:
-    conn = sqlite3.connect(DB_PATH)
-    conn.execute("PRAGMA foreign_keys = ON;")
-    with conn:
+    with connect_to_db() as conn:
       cursor = conn.cursor()
 
       print(f"🔎 Checking if Event ID {event_id} exists...")

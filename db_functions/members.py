@@ -3,15 +3,13 @@ from constants import *
 from utils import *
 
 def get_members_list():
-  with sqlite3.connect(DB_PATH) as conn:
-    conn.row_factory = dict_row_factory
-    cursor = conn.cursor()
-    cursor.execute("""
+  with connect_to_db() as conn:
+    return conn.execute(
+      """
       SELECT * 
       FROM Member; 
-    """)
-    
-    return cursor.fetchall()
+      """
+    ).fetchall()
 
 
 def format_member(member: dict):
