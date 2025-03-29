@@ -59,6 +59,8 @@ WHERE checkoutId = 10;
 
 
 -- `UPDATE`s to pay off `OverdueFine`s
+
+-- Fully paid off
 UPDATE OutstandingFinesView
 SET amountPaid = (
   SELECT fineTotal 
@@ -66,3 +68,39 @@ SET amountPaid = (
   WHERE checkoutId = 2
 )
 WHERE checkoutId = 2;
+
+-- Partially paid off
+UPDATE OutstandingFinesView
+SET amountPaid = FLOOR((
+  SELECT fineTotal 
+  FROM OutstandingFinesView 
+  WHERE checkoutId = 3
+) * 0.25)
+WHERE checkoutId = 3;
+
+-- Fully paid off
+UPDATE OutstandingFinesView
+SET amountPaid = (
+  SELECT fineTotal 
+  FROM OutstandingFinesView 
+  WHERE checkoutId = 6
+)
+WHERE checkoutId = 6;
+
+-- Partially paid off
+UPDATE OutstandingFinesView
+SET amountPaid = FLOOR((
+  SELECT fineTotal 
+  FROM OutstandingFinesView 
+  WHERE checkoutId = 7
+) * 0.5)
+WHERE checkoutId = 7;
+
+-- Fully paid off
+UPDATE OutstandingFinesView
+SET amountPaid = (
+  SELECT fineTotal 
+  FROM OutstandingFinesView 
+  WHERE checkoutId = 8
+)
+WHERE checkoutId = 8;
