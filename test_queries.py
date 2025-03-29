@@ -6,8 +6,8 @@ from _db_functions import *
 def test_queries():
   # print_items_list()
   #  list_all_members()
-  borrow_item(1, 6)
-  return_item(6, 1)
+  borrow_item(member_id=9, item_id=6)
+  # return_item(item_id=6, instance_id=2)
 
 
 if __name__ == '__main__':
