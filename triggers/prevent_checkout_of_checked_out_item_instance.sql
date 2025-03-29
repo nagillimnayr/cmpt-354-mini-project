@@ -11,6 +11,5 @@ WHEN (
     instanceId = NEW.instanceId
 ) IS NOT NULL
 BEGIN 
-  SELECT 
-  RAISE (ABORT, 'ItemInstance is already checked out');
+  SELECT RAISE (ABORT, 'ERROR: Item is already checked out');
 END;
