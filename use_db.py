@@ -60,12 +60,19 @@ while uInput not in ['q', 'quit', 'kill']:
                             sTerm = input('Search Term: ')
                             if sTerm == 'b': break
 
-                            search_for_item(sTerm)
+                            results = search_for_item(sTerm)
+                            if len(results) == 0: print("No items found.")
+                            else: 
+                              print('\nItems found:\n')
+                              print_items_list(results)
                         case 'i':
                             iId = input('Item Id: ')
                             if iId == 'b': break
                             
-                            find_item_by_id(int(iId))
+                            result = find_item_by_id(int(iId))
+                            if result is None: print("No item found.")
+                            else: print_item(result)
+                            
                     con = input('Would you like to search for another item? (y/n): ').strip().lower()
                     if con == 'n': break
                     elif not con == 'y': con = input('Invalid entry (y/n): ').strip().lower()

@@ -28,16 +28,10 @@ def format_item(item: dict) -> str:
     f"Description: {item.get('description')}",
   ])
 
-def print_items_list():
-  """
-  Prints all items.
-  """
-  items = get_items_list()
-  
-  if len(items) == 0:
-    print("No items found.")
-    return
-  
+def print_item(item: dict):
+  print(format_item(item))
+
+def print_items_list(items: list[dict]):
   for item_str in [format_item(item) for item in items]:
     print(item_str, end='\n\n')
 
@@ -48,7 +42,6 @@ def search_for_item(search_term: str):
   Will compare the search term with the `title`, `author`, `description`, 
   and `publisher` attributes.
   """
-  
   filters = [
     'title',
     'author',
@@ -62,9 +55,13 @@ def search_for_item(search_term: str):
     WHERE """ + where_clause + ";"
 
   with connect_to_db() as conn:
-    conn.execute("PRAGMA case_sensitive_like = false;")
-    return conn.execute(query, {
-        'search': '%'+search_term+'%'
+    cursor = conn.cursor()
+    return cursor.execute(
+      "PRAGMA case_sensitive_like = false;"
+    ).execute(
+      query, 
+      {
+      'search': '%'+search_term+'%'
       }
     ).fetchall()
 
