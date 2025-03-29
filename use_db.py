@@ -223,7 +223,7 @@ while uInput not in ['q', 'quit', 'kill']:
                             if (qId == 'b'): break
                             while not qId.isdigit(): qId = input('Invalid questionId, enter again: ')
 
-                            answers = get_answers_to_question(qId)        
+                            answers = get_answers_to_question(int(qId))        
                         case 'p':
                             mId = input('Member Id: ')
                             if (mId == 'b'): break
@@ -233,7 +233,7 @@ while uInput not in ['q', 'quit', 'kill']:
                             if (question == 'b'): break
                             while len(question) == 0: question = input("Blank question, enter again: ")
 
-                            post_question(mId, question)
+                            post_question(int(mId), question)
                         case 'aq':
                             qId = input('Question Id: ')
                             if (qId == 'b'): break
@@ -247,7 +247,7 @@ while uInput not in ['q', 'quit', 'kill']:
                             if (answer == 'b'): break
                             while len(answer) == 0: answer = input("Blank answer, enter again: ")
 
-                            post_answer(qId, pId, answer)
+                            post_answer(int(qId), int(pId), answer)
             case _:
                 print('base case')
 
