@@ -1,7 +1,5 @@
-import _db_functions
 from datetime import datetime
 
-from _db_functions import *
 from db_functions import *
 
 KEYWORDS = ['fnditm', 'finditem', 'brw', 'borrowitem', 'rtn', 'returnitem', 'dnt', 'donate', 'fndevt', 'findevent', 'reg', 'register', 'vlt', 'volunteer', 'ask', 'askhelp']
