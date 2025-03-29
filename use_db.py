@@ -4,14 +4,30 @@ from datetime import datetime
 from _db_functions import *
 from db_functions import *
 
-KEYWORDS = ['fnditm', 'finditem', 'brw', 'borrowitem', 'rtn', 'returnitem', 'dnt', 'donate', 'fndevt', 'findevent', 'reg', 'register', 'vlt', 'volunteer', 'ask', 'askhelp']
+KEYWORDS = ['fnditm', 'finditem', 'brw', 'borrowitem', 'rtn', 'returnitem', 'dnt', 'donate', 'fndevt', 'findevent', 'reg', 'register', 'vlt', 'volunteer', 'qst', 'questions']
 
-uInput = ''
 
-print('Hello, how can I assist you? (type help for a list of commands)')
+
+print ('Hello, are you a member (m) or librarian (l)?')
+uInput = input('> ')
+while not uInput in ['m', 'l']:
+    uInput = input('Invalid entry (m or l) \n> ')
+match uInput:
+    case 'm':
+        mId = input('Enter member Id\n> ')
+        mIds = get_member_ids()
+        print(mIds)
+        while not mId in mIds:
+            if not mId.isdigit(): mId = input('Invalid memberId, enter again\n> ')
+            mId = input('Member Id not found, enter again\n> ')
+        
+        
+
+print('How can I assist you? (type help for a list of commands)')
 
 while uInput not in ['q', 'quit', 'kill']:
-    uInput = input('\nEnter Input: ').strip().lower()
+    
+    uInput = input('> ').strip().lower()
 
     if len(uInput) == 0: continue
 
@@ -35,8 +51,8 @@ while uInput not in ['q', 'quit', 'kill']:
                     print('Description: register to attend a specific event by eventId')
                 case 'vlt' | 'volunteer':
                     print('Description: volunteer to become a librarian')
-                case 'ask' | 'askhelp':
-                    print('Description: ask a librarian for help')
+                case 'qst' | 'questions':
+                    print('Description: see question board/post a question')
                 case _:
                     print('Unrecognized Command')
         else:
@@ -183,8 +199,50 @@ while uInput not in ['q', 'quit', 'kill']:
                     con = input('Would you like to register another member? (y/n): ').strip().lower()
                     if con == 'n': break 
                     elif not con == 'y': con = input('Invalid entry (y/n): ').strip().lower()
-            case 'ask' | 'askhelp':
-                print('Foo')
+            case 'qst' | 'questions':
+                while True:
+                    print('See questions (q),\n'
+                    'see all questions & answers (qa),\n'
+                    'see answers to specific question (sq),\n'
+                    'post question (p)\n'
+                    'answer question (aq)\n')
+
+                    choice = input('Enter choice: ')
+                    match choice:
+                        case 'q':
+                            questions = _db_functions.get_questions()
+                        case 'qa':
+                            questionsAndAnswers = _db_functions.get_questions_with_answers()
+                        case 'sq':
+                            qId = input('Question Id: ')
+                            if (qId == 'b'): break
+                            while not qId.isdigit(): qId = input('Invalid questionId, enter again: ')
+
+                            answers = _db_functions.get_answers_to_question(qId)        
+                        case 'p':
+                            mId = input('Member Id: ')
+                            if (mId == 'b'): break
+                            while not mId.isdigit(): mId = input('Invalid memberId, enter again: ')
+
+                            question = input("Question to post: ")
+                            if (question == 'b'): break
+                            while len(question) == 0: question = input("Blank question, enter again: ")
+
+                            _db_functions.post_question(mId, question)
+                        case 'aq':
+                            qId = input('Question Id: ')
+                            if (qId == 'b'): break
+                            while not qId.isdigit(): qId = input('Invalid questionId, enter again: ')
+
+                            pId = input('Personnel Id: ')
+                            if (pId == 'b'): break
+                            while not pId.isdigit(): pId = input('Invalid personnelId, enter again: ')
+
+                            answer = input("Answer to post: ")
+                            if (answer == 'b'): break
+                            while len(answer) == 0: answer = input("Blank answer, enter again: ")
+
+                            _db_functions.post_answer(qId, pId, answer)
             case _:
                 print('base case')
 
