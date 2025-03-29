@@ -32,8 +32,7 @@ def execute_sql_in_directory(dir_name: str):
   """
   Reads all .sql files from a directory and executes the commands within.
   """
-  conn = connect_to_db()
-  with conn:
+  with connect_to_db() as conn:
     cursor = conn.cursor()
     files = os.listdir(dir_name)
     for file_name in files:
@@ -41,8 +40,9 @@ def execute_sql_in_directory(dir_name: str):
       with open(path) as file:
         print(f"Attempting to Execute {path}")
         command = file.read()
-        cursor.execute(command)
+        cursor.executescript(command)
         print(f"Successfully Executed {path}")
+  print()
 
 
 def create_tables():
@@ -66,25 +66,10 @@ def create_database():
   create_triggers()
 
 
-def insert_sample_data():
-  """ 
-  # Reads in SQL INSERT commands from files and executes them. 
-  """
-  print("--------------------- Inserting Data ---------------------")
-  execute_sql_in_directory('sample_data/insert')
-
-def update_sample_data():
-  """
-  This sample data is added to the database via UPDATE rather than INSERT
-  so that we can take advantage of our triggers to handle automating 
-  certain tasks.
-  """
-  print("--------------------- Updating Data ---------------------")
-  execute_sql_in_directory('sample_data/update')
-
 def create_sample_data():
-  insert_sample_data()
-  update_sample_data()
+  print("--------------------- Creating Data ---------------------")
+  execute_sql_in_directory('sample_data')
+
 
 if __name__ == '__main__':
   try:

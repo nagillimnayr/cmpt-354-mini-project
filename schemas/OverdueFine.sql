@@ -3,7 +3,11 @@ CREATE TABLE IF NOT EXISTS OverdueFine (
     checkoutId INTEGER NOT NULL UNIQUE, -- Maximum one fine per `CheckoutRecord`
     fineTotal DECIMAL(5,2) NOT NULL,
     amountPaid DECIMAL(5,2) NOT NULL DEFAULT 0.00,
-    dateIssued DATE NOT NULL,
 
-    FOREIGN KEY (checkoutId) REFERENCES CheckoutRecord(checkoutId)
+    FOREIGN KEY (checkoutId) 
+        REFERENCES CheckoutRecord(checkoutId)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    
+    CHECK (amountPaid <= fineTotal)
 );

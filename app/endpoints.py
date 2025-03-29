@@ -21,3 +21,7 @@ def get_all_personnel():
 @app.get('/checkouts')
 def get_all_checkout_records():
     return get_all_checkout_records_list()
+
+@app.get('/fines')
+def get_all_fines():
+    return get_all_fines_list()
