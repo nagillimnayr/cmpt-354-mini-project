@@ -78,13 +78,13 @@ def find_item_by_id(item_id: int):
     FROM Item
     WHERE Item.itemId = ?;
   """
-  with sqlite3.connect(DB_PATH) as conn:
+  with connect_to_db() as conn:
     cursor = conn.cursor()
     cursor.execute(query, (item_id,))
     return cursor.fetchone()
 
 
-def donate_item(title:str, author:str, format:str, description:str, publish_date:datetime, publisher:str):
+def donate_item(title:str, author:str, format:str, description:str, publish_date: str, publisher:str):
   """
   Handles the donation of an item to the library.
   1. Checks if the item already exists in the `Item` table.
