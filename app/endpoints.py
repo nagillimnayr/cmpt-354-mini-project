@@ -25,3 +25,7 @@ def get_all_checkout_records():
 @app.get('/fines')
 def get_all_fines():
     return get_all_fines_list()
+
+@app.get('/fines/outstanding')
+def get_all_outstanding_fines():
+    return get_all_outstanding_fines_list()

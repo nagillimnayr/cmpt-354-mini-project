@@ -13,6 +13,16 @@ def get_all_fines_list():
     )
     return cursor.fetchall()
   
+def get_all_outstanding_fines_list():
+  with connect_to_db() as conn:
+    cursor = conn.cursor()
+    cursor.execute(
+      """
+      SELECT * 
+      FROM OutstandingFinesView; 
+      """
+    )
+    return cursor.fetchall()
 
 def get_outstanding_fines_for_member(member_id: int):
   with connect_to_db() as conn:
