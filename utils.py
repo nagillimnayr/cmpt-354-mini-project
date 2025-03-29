@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 import json
 import sqlite3
 
@@ -12,7 +12,7 @@ def dict_row_factory(cursor, row):
   return {key: value for key, value in zip(fields, row)}
 
 def connect() -> sqlite3.Connection:
-  conn = sqlite3.connect(DB_PATH)
+  conn = sqlite3.connect(DB_PATH, detect_types=sqlite3.PARSE_DECLTYPES)
   conn.row_factory = dict_row_factory
   return conn
 
@@ -25,3 +25,11 @@ def pretty_print(obj):
 
 def get_current_date():
   return datetime.now().strftime("%Y-%m-%d")
+
+
+
+def convert_date(val):
+    """Convert ISO 8601 date to datetime.date object."""
+    return date.fromisoformat(val.decode())
+
+sqlite3.register_converter("date", convert_date)
