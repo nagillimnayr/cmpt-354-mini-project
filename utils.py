@@ -11,7 +11,7 @@ def dict_row_factory(cursor, row):
   fields = [column[0] for column in cursor.description]
   return {key: value for key, value in zip(fields, row)}
 
-def connect() -> sqlite3.Connection:
+def connect_to_db() -> sqlite3.Connection:
   conn = sqlite3.connect(DB_PATH, detect_types=sqlite3.PARSE_DECLTYPES)
   conn.row_factory = dict_row_factory
   return conn

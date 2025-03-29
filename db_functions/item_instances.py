@@ -3,7 +3,7 @@ from constants import *
 from utils import *
 
 def get_item_instances_list():
-  with connect() as conn:
+  with connect_to_db() as conn:
     cursor = conn.cursor()
     cursor.execute("""
       SELECT * 

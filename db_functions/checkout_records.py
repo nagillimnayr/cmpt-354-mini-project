@@ -25,7 +25,7 @@ def borrow_item(member_id: int, item_id: int):
   3. Updates ItemInstance to mark the item as checked out.
   """
   try:
-    conn = connect()
+    conn = connect_to_db()
     conn.execute("PRAGMA foreign_keys = ON;")
     with conn:
       cursor = conn.cursor()
@@ -88,7 +88,7 @@ def return_item(item_id:int, instance_id:int):
   4. (Optional) Applies a fine if the item is overdue.
   """
   try:
-    conn = connect()
+    conn = connect_to_db()
     conn.execute("PRAGMA foreign_keys = ON;")
     with conn:
       cursor = conn.cursor()

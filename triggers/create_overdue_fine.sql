@@ -4,17 +4,16 @@
 CREATE TRIGGER IF NOT EXISTS create_overdue_fine 
 AFTER UPDATE ON CheckoutRecord
 WHEN 
+  OLD.returnDate IS NULL 
+  AND 
   NEW.returnDate IS NOT NULL
   AND 
   JULIANDAY(NEW.returnDate) > JULIANDAY(NEW.dueDate)
 BEGIN 
-  INSERT INTO OverdueFine(checkoutId, fineTotal, dateIssued)
+  INSERT INTO OverdueFine(checkoutId, fineTotal, dateIssued) 
   VALUES (
     NEW.checkoutId, 
-    MIN(
-      FLOOR(JULIANDAY(NEW.returnDate) - JULIANDAY(NEW.dueDate)) * 1.50, 
-      100.00
-    ), 
+    MIN(FLOOR(JULIANDAY(NEW.returnDate) - JULIANDAY(NEW.dueDate)) * 1.50, 100.00), 
     DATE(current_date, 'localtime')
   );
 END;

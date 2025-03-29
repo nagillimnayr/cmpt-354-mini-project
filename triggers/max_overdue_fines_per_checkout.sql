@@ -6,8 +6,8 @@ CREATE TRIGGER IF NOT EXISTS max_overdue_fines_per_checkout
 BEFORE INSERT ON OverdueFine 
 WHEN (
     SELECT COUNT(*)
-    FROM OverdueFine AS O
-    WHERE O.checkoutId = NEW.checkoutId
+    FROM OverdueFine
+    WHERE OverdueFine.checkoutId = NEW.checkoutId
   ) >= 10
 BEGIN
     SELECT 
