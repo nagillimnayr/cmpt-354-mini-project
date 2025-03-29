@@ -11,6 +11,16 @@ def get_members_list():
       """
     ).fetchall()
 
+def get_member_ids():
+    with connect_to_db() as conn:
+        cursor = conn.cursor()
+        cursor.execute("""
+          SELECT memberId
+          FROM Member;
+        """)
+
+        rows = cursor.fetchall()
+        return [row[0] for row in rows]
 
 def format_member(member: dict):
   """
@@ -33,5 +43,5 @@ def print_members_list():
     print("No members found.")
     return
       
-  for member_str in [format(member) for member in members]:
+  for member_str in [format_member(member) for member in members]:
     print(member_str, end='\n\n')
