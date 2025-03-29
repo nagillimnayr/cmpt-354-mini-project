@@ -65,7 +65,7 @@ while uInput not in ['q', 'quit', 'kill']:
                             iId = input('Item Id: ')
                             if iId == 'b': break
                             
-                            find_item_by_id(iId)
+                            find_item_by_id(int(iId))
                     con = input('Would you like to search for another item? (y/n): ').strip().lower()
                     if con == 'n': break
                     elif not con == 'y': con = input('Invalid entry (y/n): ').strip().lower()
@@ -79,7 +79,7 @@ while uInput not in ['q', 'quit', 'kill']:
                     if iId == 'b': break 
                     while not iId.isdigit(): itemId = input('\nInvalid itemId, enter again: ')
 
-                    borrow_item(mId, iId)
+                    borrow_item(int(mId), int(iId))
 
                     con = input('Would you like to borrow another item? (y/n): ').strip().lower()
                     if con == 'n': break 
@@ -94,7 +94,7 @@ while uInput not in ['q', 'quit', 'kill']:
                     if instanceId == 'b': break 
                     while not instanceId.isdigit(): instanceId = input('\nInvalid itemId, enter again: ')
 
-                    return_item(itemId, instanceId)
+                    return_item(int(itemId), int(instanceId))
 
                     con = input('Would you like to return another item? (y/n): ').strip().lower()
                     if con == 'n': break 
@@ -151,7 +151,7 @@ while uInput not in ['q', 'quit', 'kill']:
                             eId = input('Event Id: ')
                             if eId == 'b': break
                             
-                            find_event_by_id(eId)
+                            find_event_by_id(int(eId))
                     con = input('Would you like to search for another event? (y/n): ').strip().lower()
                     if con == 'n': break 
                     elif not con == 'y': con = input('Invalid entry (y/n): ').strip().lower()  
@@ -165,7 +165,7 @@ while uInput not in ['q', 'quit', 'kill']:
                     if eId == 'b': break
                     while not eId.isdigit(): eId = input('\nInvalid eventId, enter again: ')
 
-                    register_for_event(mId, eId)
+                    register_for_event(int(mId), int(eId))
 
                     con = input('Would you like to search for another event? (y/n): ').strip().lower()
                     if con == 'n': break 
@@ -176,7 +176,7 @@ while uInput not in ['q', 'quit', 'kill']:
                     if mId == 'b': break
                     while not mId.isdigit(): mId = input('\nInvalid memberId, enter again: ')
 
-                    register_member_as_volunteer(mId)
+                    register_member_as_volunteer(int(mId))
 
                     con = input('Would you like to register another member? (y/n): ').strip().lower()
                     if con == 'n': break 
