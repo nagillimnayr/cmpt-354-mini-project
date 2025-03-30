@@ -32,9 +32,6 @@ def format_item(item: dict) -> str:
 def print_item(item: dict):
   print(format_item(item))
 
-
-
-
 def print_items_list(items: list[dict]):
   max_lengths = {
     'itemId': len('ID'),
@@ -74,7 +71,6 @@ def print_items_list(items: list[dict]):
       [f"{str(item[key]):<{value}}" for key, value in max_lengths.items()]
     ))
 
-
 def search_for_item(search_term: str):
   """
   Searches for an Item based on the provided search term. 
@@ -112,7 +108,6 @@ def find_item_by_id(item_id: int):
   """
   with connect_to_db() as conn:
     return conn.execute(query, (item_id,)).fetchone()
-
 
 def donate_item(title:str, author:str, format:str, description:str, publish_date: str, publisher:str):
   """
