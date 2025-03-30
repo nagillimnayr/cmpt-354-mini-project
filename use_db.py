@@ -9,8 +9,7 @@ PID = 0
 
 print ('Hello, are you a member (m) or personnel (p)?')
 uInput = input('> ')
-while not uInput in ['m', 'p']:
-    uInput = input('Invalid entry (m or p) \n> ')
+while not uInput in ['m', 'p']: uInput = input('Invalid entry (m or p) \n> ')
 match uInput:
     case 'm':
         mId = input('Enter member Id\n> ')
@@ -44,7 +43,7 @@ match uInput:
 print('How can I assist you? (type help for a list of commands)')
 
 while uInput not in ['q', 'quit', 'kill']:
-    uInput = input('> ').strip().lower()
+    uInput = input('Enter input\n> ').strip().lower()
     if len(uInput) == 0: continue
     sInput = uInput.split()
 
@@ -79,7 +78,7 @@ while uInput not in ['q', 'quit', 'kill']:
             'Find Event:           -fndevt  -findevent\n'
             'Register Event:       -reg     -register\n'
             'Volunteer:            -vlt     -volunteer\n'
-            'Ask Librarian:        -ask     -askhelp')
+            'Ask Librarian:        -qst     -question')
     
     # Check for input in db keywords
     if sInput[0] in KEYWORDS:
@@ -213,25 +212,30 @@ while uInput not in ['q', 'quit', 'kill']:
                     elif not con == 'y': con = input('Invalid entry (y/n): ').strip().lower()
             case 'qst' | 'questions':
                 while True:
-                    print('See questions (q),\n'
-                    'see all questions & answers (qa),\n'
-                    'see answers to specific question (sq),\n'
-                    'post question (p)\n'
-                    'answer question (aq)\n')
+                    print(
+                        'See questions (qst),\n'
+                        'see all questions & answers (qa),\n'
+                        'see answers to specific question (sq),\n'
+                        'post question (pst)\n'
+                        'answer question (aq)\n')
 
                     choice = input('Enter choice: ')
                     match choice:
-                        case 'q':
+                        case 'q': break
+                        case 'qst':
                             questions = get_questions()
+                            pretty_print(questions)
                         case 'qa':
                             questionsAndAnswers = get_questions_with_answers()
+                            pretty_print(questionsAndAnswers)
                         case 'sq':
                             qId = input('Question Id: ')
                             if (qId == 'b'): break
                             while not qId.isdigit(): qId = input('Invalid questionId, enter again: ')
 
-                            answers = get_answers_to_question(int(qId))        
-                        case 'p':
+                            answers = get_answers_to_question(int(qId))  
+                            pretty_print(answers)      
+                        case 'pst':
                             mId = MID
                             question = input("Question to post: ")
                             if (question == 'b'): break
@@ -250,6 +254,9 @@ while uInput not in ['q', 'quit', 'kill']:
                             while len(answer) == 0: answer = input("Blank answer, enter again: ")
 
                             post_answer(int(qId), int(pId), answer)
+                    con = input('Would you like to search for another event? (y/n): ').strip().lower()
+                    if con == 'n': break 
+                    elif not con == 'y': con = input('Invalid entry (y/n): ').strip().lower()  
             case _:
                 print('base case')
 
