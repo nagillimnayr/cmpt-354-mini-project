@@ -18,12 +18,11 @@ def get_personnel_ids():
       SELECT personnelId, memberId
       FROM personnel;
     """)
-
     return cursor.fetchall()
   
 def find_personnel_id_by_member_id(member_id: int):
   with connect_to_db() as conn:
-    return conn.execute(
+    result = conn.execute(
       """
       SELECT personnelId 
       FROM Personnel
@@ -31,6 +30,7 @@ def find_personnel_id_by_member_id(member_id: int):
       """, 
       (member_id,)
     ).fetchone()
+    return result['personnelId'] if result is not None else None
   
 def register_member_as_volunteer(member_id: int):
   """
@@ -56,9 +56,9 @@ def register_member_as_volunteer(member_id: int):
       }
     )
     
-    result = find_personnel_id_by_member_id(member_id)
-    if result is not None:
-      personnel_id = result[0]
+    personnel_id = cursor.lastrowid
+    print(f'personnelId: {personnel_id}')
+    if personnel_id is not None:
       print(f"✅ Member with ID: {member_id} successfully registered as a volunteer!\nTheir Personnel ID is: {personnel_id}. ")
     else:
       print(f"Error: Failed to register member {member_id} as a volunteer.")
