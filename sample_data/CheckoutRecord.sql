@@ -16,8 +16,7 @@ VALUES
   (11, 11, 7,  1, '2025-02-10', '2025-02-24'), -- Not yet returned
   (12, 12, 9,  1, '2025-02-14', '2025-02-28'), -- Not yet returned
   (13, 13, 11, 1, '2025-02-18', '2025-03-04'), -- Not yet returned
-  (14, 14, 13, 1, '2025-02-22', '2025-03-08'), -- Not yet returned
-  (15, 15, 15, 1, '2025-03-01', '2025-03-15'); -- Not yet returned
+  (14, 14, 13, 1, '2025-02-22', '2025-03-08'); -- Not yet returned
 
 -- `UPDATE` statements to activate triggers, which will automatically create 
 -- fines for overdue items.

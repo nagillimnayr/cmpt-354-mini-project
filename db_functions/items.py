@@ -1,6 +1,7 @@
 import sqlite3
 from constants import *
 from utils import *
+from datetime import date
 
 def get_items_list():
   with connect_to_db() as conn:
@@ -36,14 +37,16 @@ def print_item(item: dict):
 
 def print_items_list(items: list[dict]):
   max_lengths = {
-    'itemId': 0,
-    'title': 0,
-    'author': 0,
-    'format': 0,
-    'publisher': 0,
-    'publishDate': 0,
+    'itemId': len('Item ID'),
+    'title': len('Title'),
+    'author': len('Author'),
+    'format': len('Format'),
+    'publisher': len('Publisher'),
+    'publishDate': len('Date Published'),
   }
   for item in items:
+    item['publishDate'] = date.isoformat(item['publishDate'])
+    del item['description']
     for key, value in item.items():
       max_lengths[key] = max(max_lengths[key], len(str(value)))
     # max_lengths = {
@@ -66,7 +69,7 @@ def print_items_list(items: list[dict]):
   print(header)
   for item in items:
     print(' | '.join(
-      [f"{value:<{max_lengths[key]}}" for key, value in item.items()]
+      [f"{str(value):<{max_lengths[key]}}" for key, value in item.items()]
     ))
 
 
