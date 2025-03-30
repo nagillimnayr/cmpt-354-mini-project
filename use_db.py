@@ -4,7 +4,8 @@ from db_functions import *
 
 KEYWORDS = ['fnditm', 'finditem', 'brw', 'borrowitem', 'rtn', 'returnitem', 'dnt', 'donate', 'fndevt', 'findevent', 'reg', 'register', 'vlt', 'volunteer', 'qst', 'questions']
 
-MID, PID = 0
+MID = 0
+PID = 0
 
 print ('Hello, are you a member (m) or personnel (p)?')
 uInput = input('> ')
