@@ -26,9 +26,3 @@ def pretty_print(obj):
 
 def get_current_date():
   return datetime.now().strftime("%Y-%m-%d")
-
-def convert_date(val):
-    """Convert ISO 8601 date to datetime.date object."""
-    return date.fromisoformat(val.decode())
-
-sqlite3.register_converter("date", convert_date)
