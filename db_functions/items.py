@@ -31,9 +31,43 @@ def format_item(item: dict) -> str:
 def print_item(item: dict):
   print(format_item(item))
 
+
+
+
 def print_items_list(items: list[dict]):
-  for item_str in [format_item(item) for item in items]:
-    print(item_str, end='\n\n')
+  max_lengths = {
+    'itemId': 0,
+    'title': 0,
+    'author': 0,
+    'format': 0,
+    'publisher': 0,
+    'publishDate': 0,
+  }
+  for item in items:
+    for key, value in item.items():
+      max_lengths[key] = max(max_lengths[key], len(str(value)))
+    # max_lengths = {
+    #   'itemId': max(max_lengths['itemId'], item['itemId']),
+    #   'title': max(max_lengths['title'], item['title']),
+    #   'author': max(max_lengths['author'], item['author']),
+    #   'format': max(max_lengths['format'], item['format']),
+    #   'publisher': max(max_lengths['publisher'], item['publisher']),
+    #   'publishDate': max(max_lengths['publishDate'], item['publishDate']),
+    # }
+    
+  header = ' | '.join([
+    f"{'Item ID':<{max_lengths['itemId']}}",
+    f"{'Title':<{max_lengths['title']}}",
+    f"{'Author':<{max_lengths['author']}}",
+    f"{'Format':<{max_lengths['format']}}",
+    f"{'Publisher':<{max_lengths['publisher']}}",
+    f"{'Date Published':<{max_lengths['publishDate']}}",
+  ])
+  print(header)
+  for item in items:
+    print(' | '.join(
+      [f"{value:<{max_lengths[key]}}" for key, value in item.items()]
+    ))
 
 
 def search_for_item(search_term: str):

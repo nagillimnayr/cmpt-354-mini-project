@@ -48,7 +48,7 @@ def borrow_item(member_id: int, item_id: int):
 
       cursor.execute("""
         INSERT INTO CheckoutRecord (memberId, itemId, instanceId, checkoutDate, dueDate, returnDate)
-        VALUES (?, ?, ?, date('now'), date('now', '+14 days'), NULL);
+        VALUES (?, ?, ?, DATE('now'), DATE('now', '+14 days'), NULL);
       """, (member_id, item_id, instance_id))
       checkout_id = cursor.lastrowid  # Retrieve the newly inserted checkoutId
 
@@ -80,7 +80,6 @@ def return_item(item_id:int, instance_id:int):
   1. Finds the active checkout record (if exists).
   2. Updates CheckoutRecord to mark it as returned.
   3. Updates ItemInstance to make it available for borrowing.
-  4. (Optional) Applies a fine if the item is overdue.
   """
   try:
     with connect_to_db() as conn:
@@ -107,7 +106,7 @@ def return_item(item_id:int, instance_id:int):
       # Step 2: Mark the checkout record as returned
       cursor.execute("""
         UPDATE CheckoutRecord
-        SET returnDate = date('now')
+        SET returnDate = DATE(current_date, 'localtime')
         WHERE checkoutId = ?;
       """, (checkout_id,))
       
@@ -125,17 +124,6 @@ def return_item(item_id:int, instance_id:int):
 
       print(f"✅ Item ID {item_id}, Instance ID {instance_id} is now available for borrowing.")
 
-      # Step 4: (Optional) Apply overdue fine if the item is returned late
-      cursor.execute("""
-        INSERT INTO OverdueFine (checkoutId, fineTotal, amountPaid, dateIssued)
-        SELECT ?, 
-                (JULIANDAY(?) - JULIANDAY(dueDate)) * 0.50, 
-                0, ?
-        FROM CheckoutRecord
-        WHERE checkoutId = ? AND ? > dueDate;
-      """, (checkout_id, return_date, return_date, checkout_id, return_date))
-
-      print("✅ Overdue fine checked (if applicable).")
       print(f"✅ Return process completed for Item ID {item_id}, Instance ID {instance_id}.")
 
   except sqlite3.Error as e:
