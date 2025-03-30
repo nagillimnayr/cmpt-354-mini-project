@@ -67,9 +67,11 @@ def print_items_list(items: list[dict]):
     f"{'Date Published':<{max_lengths['publishDate']}}",
   ])
   print(header)
+  print('-' * len(header))
+  
   for item in items:
     print(' | '.join(
-      [f"{str(value):<{max_lengths[key]}}" for key, value in item.items()]
+      [f"{str(item[key]):<{value}}" for key, value in max_lengths.items()]
     ))
 
 
