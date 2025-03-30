@@ -37,7 +37,7 @@ def print_item(item: dict):
 
 def print_items_list(items: list[dict]):
   max_lengths = {
-    'itemId': len('Item ID'),
+    'itemId': len('ID'),
     'title': len('Title'),
     'author': len('Author'),
     'format': len('Format'),
@@ -59,7 +59,7 @@ def print_items_list(items: list[dict]):
     # }
     
   header = ' | '.join([
-    f"{'Item ID':<{max_lengths['itemId']}}",
+    f"{'ID':<{max_lengths['itemId']}}",
     f"{'Title':<{max_lengths['title']}}",
     f"{'Author':<{max_lengths['author']}}",
     f"{'Format':<{max_lengths['format']}}",
