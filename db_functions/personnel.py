@@ -11,6 +11,15 @@ def get_personnel_list():
       """
     ).fetchall()
   
+def get_personnel_ids():
+  with connect_to_db() as conn:
+    cursor = conn.cursor()
+    cursor.execute("""
+      SELECT personnelId, memberId
+      FROM personnel;
+    """)
+
+    return cursor.fetchall()
   
 def find_personnel_id_by_member_id(member_id: int):
   with connect_to_db() as conn:
