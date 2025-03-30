@@ -24,5 +24,7 @@ def pretty_print(obj):
     formatted_string = json.dumps(obj, indent=4, sort_keys=False)
     print(formatted_string)
 
-def get_current_date():
-  return datetime.now().strftime("%Y-%m-%d")
+def convert_date(val: bytes):
+  return val.decode()
+
+sqlite3.register_converter("date", convert_date)

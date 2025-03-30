@@ -42,7 +42,6 @@ def print_items_list(items: list[dict]):
     'publishDate': len('Date Published'),
   }
   for item in items:
-    item['publishDate'] = date.isoformat(item['publishDate'])
     del item['description']
     for key, value in item.items():
       max_lengths[key] = max(max_lengths[key], len(str(value)))
