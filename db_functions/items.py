@@ -3,7 +3,7 @@ from constants import *
 from utils import *
 from datetime import date
 
-def get_items_list():
+def get_items():
   with connect_to_db() as conn:
     return conn.execute(
       """
@@ -32,35 +32,54 @@ def format_item(item: dict) -> str:
 def print_item(item: dict):
   print(format_item(item))
 
-def print_items_list(items: list[dict]):
+def get_item_list_view():
+  with connect_to_db() as conn:
+    return conn.execute(
+      """
+      SELECT * 
+      FROM ItemListView 
+      ORDER BY 
+        format ASC,
+        title ASC;
+      """
+    ).fetchall()
+
+def print_item_list_view(items: list[dict]):
+  column_labels = [
+    ('itemId', 'ID'),
+    ('title', 'Title'),
+    ('author', 'Author'),
+    ('format', 'Format'),
+    ('numCopies', '# of Copies'),
+    ('availableCopies', 'Available Copies'),
+  ]
+  
   max_lengths = {
-    'itemId': len('ID'),
-    'title': len('Title'),
-    'author': len('Author'),
-    'format': len('Format'),
-    'publisher': len('Publisher'),
-    'publishDate': len('Date Published'),
+    key: len(value) for key, value in column_labels
   }
-  for item in items:
-    del item['description']
-    for key, value in item.items():
-      max_lengths[key] = max(max_lengths[key], len(str(value)))
-    
-  header = ' | '.join([
-    f"{'ID':<{max_lengths['itemId']}}",
-    f"{'Title':<{max_lengths['title']}}",
-    f"{'Author':<{max_lengths['author']}}",
-    f"{'Format':<{max_lengths['format']}}",
-    f"{'Publisher':<{max_lengths['publisher']}}",
-    f"{'Date Published':<{max_lengths['publishDate']}}",
-  ])
-  print(header)
-  print('-' * len(header))
   
   for item in items:
-    print(' | '.join(
-      [f"{str(item[key]):<{value}}" for key, value in max_lengths.items()]
-    ))
+    for key, value in item.items():
+      max_lengths[key] = max(max_lengths[key], len(str(value)))
+  
+  col_sep =  ' | '
+    
+  header = col_sep + col_sep.join([
+    f"{value:<{max_lengths[key]}}"
+    for key, value in column_labels
+  ]) + col_sep
+  line = '-' * len(header)
+  print(line)
+  print(header)
+  print(line)
+  
+  for item in items:
+    row = col_sep + col_sep.join(
+      [f"{str(item[key]):<{max_lengths[key]}}" for key, _ in column_labels]
+    ) + col_sep
+    print(row)
+    
+  print(line)
 
 def search_for_item(search_term: str):
   """

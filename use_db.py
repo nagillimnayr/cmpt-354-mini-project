@@ -96,7 +96,7 @@ while uInput not in ['q', 'quit', 'kill']:
                             if len(results) == 0: print("No items found.")
                             else: 
                               print('\nItems found:\n')
-                              print_items_list(results)
+                              print_item_list_view(results)
                         case 'i':
                             iId = input('Item Id: ')
                             if iId == 'b': break

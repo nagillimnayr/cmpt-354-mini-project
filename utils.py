@@ -28,3 +28,38 @@ def convert_date(val: bytes):
   return val.decode()
 
 sqlite3.register_converter("date", convert_date)
+
+
+def print_table_list(objs: list[dict], column_labels: list[tuple[str, str]]):
+  """
+  Prints a table.
+  The `column_labels` must contain tuples associating the keys of the dicts to 
+  print with their corresponding column label.
+  Example: [('key', 'Column Label')] 
+  """
+  max_lengths = {
+    key: len(value) for key, value in column_labels
+  }
+  
+  for obj in objs:
+    for key, value in obj.items():
+      max_lengths[key] = max(max_lengths[key], len(str(value)))
+  
+  col_sep =  ' | '
+    
+  header = col_sep + col_sep.join([
+    f"{value:<{max_lengths[key]}}"
+    for key, value in column_labels
+  ]) + col_sep
+  line = '-' * len(header)
+  print(line)
+  print(header)
+  print(line)
+  
+  for obj in objs:
+    row = col_sep + col_sep.join(
+      [f"{str(obj[key]):<{max_lengths[key]}}" for key, _ in column_labels]
+    ) + col_sep
+    print(row)
+    
+  print(line)

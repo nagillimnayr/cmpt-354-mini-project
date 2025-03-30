@@ -8,7 +8,7 @@ def get_all_members():
 
 @app.get('/items')
 def get_all_items():
-    return get_items_list()
+    return get_items()
 
 @app.get('/instances')
 def get_all_item_instances():
