@@ -46,14 +46,6 @@ def print_items_list(items: list[dict]):
     del item['description']
     for key, value in item.items():
       max_lengths[key] = max(max_lengths[key], len(str(value)))
-    # max_lengths = {
-    #   'itemId': max(max_lengths['itemId'], item['itemId']),
-    #   'title': max(max_lengths['title'], item['title']),
-    #   'author': max(max_lengths['author'], item['author']),
-    #   'format': max(max_lengths['format'], item['format']),
-    #   'publisher': max(max_lengths['publisher'], item['publisher']),
-    #   'publishDate': max(max_lengths['publishDate'], item['publishDate']),
-    # }
     
   header = ' | '.join([
     f"{'ID':<{max_lengths['itemId']}}",
