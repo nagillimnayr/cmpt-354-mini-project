@@ -4,31 +4,47 @@ from db_functions import *
 
 KEYWORDS = ['fnditm', 'finditem', 'brw', 'borrowitem', 'rtn', 'returnitem', 'dnt', 'donate', 'fndevt', 'findevent', 'reg', 'register', 'vlt', 'volunteer', 'qst', 'questions']
 
+MID, PID = 0
 
-
-print ('Hello, are you a member (m) or librarian (l)?')
+print ('Hello, are you a member (m) or personnel (p)?')
 uInput = input('> ')
-while not uInput in ['m', 'l']:
-    uInput = input('Invalid entry (m or l) \n> ')
+while not uInput in ['m', 'p']:
+    uInput = input('Invalid entry (m or p) \n> ')
 match uInput:
     case 'm':
         mId = input('Enter member Id\n> ')
-        mIds = get_member_ids()
-        print(mIds)
-        while not mId in mIds:
-            if not mId.isdigit(): mId = input('Invalid memberId, enter again\n> ')
-            mId = input('Member Id not found, enter again\n> ')
-        
-        
+        while not mId.isdigit(): mId = input('Invalid memberId, enter again\n> ')
+        mId = int(mId)
 
+        members = get_members_list()
+        mIds = [m['memberId'] for m in members]
+        while mId not in mIds:
+            mId = input('Member Id not found, enter again\n> ')
+        MID = mId
+        mName = [m for m in members if m['memberId'] == mId]
+        mName = mName[0]['firstName'] + ' ' + mName[0]['lastName']
+        print('Hello, ', mName)
+    case 'p':
+        pId = input('Enter personnel Id\n> ')
+        while not pId.isdigit(): pId = input('Invalid personnelId, enter again\n> ')
+        pId = int(pId)
+
+        personnel = get_personnel_ids()
+        pIds = [p['personnelId'] for p in personnel] 
+        while pId not in pIds:
+            pId = input('Personnel Id not found, enter again\n> ')
+        PID = pId
+        pMemId = [p['memberId'] for p in personnel if p['personnelId'] == pId]
+        print(pMemId)
+        pName = get_member_name_by_id(int(pMemId[0]))
+        pName = pName['firstName'] + ' ' + pName['lastName']
+        print('Hello, ', pName)
+        
 print('How can I assist you? (type help for a list of commands)')
 
 while uInput not in ['q', 'quit', 'kill']:
-    
     uInput = input('> ').strip().lower()
-
     if len(uInput) == 0: continue
-
     sInput = uInput.split()
 
     # Check for input in help keywords
@@ -94,10 +110,7 @@ while uInput not in ['q', 'quit', 'kill']:
                     elif not con == 'y': con = input('Invalid entry (y/n): ').strip().lower()
             case 'brw' | 'borrowitem':
                 while True:
-                    mId = input('\nMember Id: ')
-                    if mId == 'b': break 
-                    while not mId.isdigit(): mId = input('\nInvalid memberId, enter again: ')
-
+                    mId = MID
                     iId = input('Item Id: ')
                     if iId == 'b': break 
                     while not iId.isdigit(): itemId = input('\nInvalid itemId, enter again: ')
@@ -180,14 +193,10 @@ while uInput not in ['q', 'quit', 'kill']:
                     elif not con == 'y': con = input('Invalid entry (y/n): ').strip().lower()  
             case 'reg' | 'register':
                 while True:
-                    mId = input('Member Id: ')
-                    if mId == 'b': break 
-                    while not mId.isdigit(): mId = input('\nInvalid memberId, enter again: ')
-
+                    mId = MID
                     eId = input('Event Id: ')
                     if eId == 'b': break
                     while not eId.isdigit(): eId = input('\nInvalid eventId, enter again: ')
-
                     register_for_event(int(mId), int(eId))
 
                     con = input('Would you like to search for another event? (y/n): ').strip().lower()
@@ -195,10 +204,7 @@ while uInput not in ['q', 'quit', 'kill']:
                     elif not con == 'y': con = input('Invalid entry (y/n): ').strip().lower()
             case 'vlt' | 'volunteer':
                 while True:
-                    mId = input('Member Id: ')
-                    if mId == 'b': break
-                    while not mId.isdigit(): mId = input('\nInvalid memberId, enter again: ')
-
+                    mId = MID
                     register_member_as_volunteer(int(mId))
 
                     con = input('Would you like to register another member? (y/n): ').strip().lower()
@@ -225,10 +231,7 @@ while uInput not in ['q', 'quit', 'kill']:
 
                             answers = get_answers_to_question(qId)        
                         case 'p':
-                            mId = input('Member Id: ')
-                            if (mId == 'b'): break
-                            while not mId.isdigit(): mId = input('Invalid memberId, enter again: ')
-
+                            mId = MID
                             question = input("Question to post: ")
                             if (question == 'b'): break
                             while len(question) == 0: question = input("Blank question, enter again: ")
@@ -238,10 +241,8 @@ while uInput not in ['q', 'quit', 'kill']:
                             qId = input('Question Id: ')
                             if (qId == 'b'): break
                             while not qId.isdigit(): qId = input('Invalid questionId, enter again: ')
-
-                            pId = input('Personnel Id: ')
-                            if (pId == 'b'): break
-                            while not pId.isdigit(): pId = input('Invalid personnelId, enter again: ')
+                            
+                            pId = PID
 
                             answer = input("Answer to post: ")
                             if (answer == 'b'): break
