@@ -53,33 +53,8 @@ def print_item_list_view(items: list[dict]):
     ('numCopies', '# of Copies'),
     ('availableCopies', 'Available Copies'),
   ]
+  print_table_list(items, column_labels)
   
-  max_lengths = {
-    key: len(value) for key, value in column_labels
-  }
-  
-  for item in items:
-    for key, value in item.items():
-      max_lengths[key] = max(max_lengths[key], len(str(value)))
-  
-  col_sep =  ' | '
-    
-  header = col_sep + col_sep.join([
-    f"{value:<{max_lengths[key]}}"
-    for key, value in column_labels
-  ]) + col_sep
-  line = '-' * len(header)
-  print(line)
-  print(header)
-  print(line)
-  
-  for item in items:
-    row = col_sep + col_sep.join(
-      [f"{str(item[key]):<{max_lengths[key]}}" for key, _ in column_labels]
-    ) + col_sep
-    print(row)
-    
-  print(line)
 
 def search_for_item(search_term: str):
   """
