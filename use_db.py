@@ -213,18 +213,14 @@ while uInput not in ['q', 'quit', 'kill']:
             case 'qst' | 'questions':
                 while True:
                     print(
-                        'See questions (qst),\n'
                         'see all questions & answers (qa),\n'
                         'see answers to specific question (sq),\n'
-                        'post question (pst)\n'
+                        'post question (pq)\n'
                         'answer question (aq)\n')
 
                     choice = input('Enter choice: ')
                     match choice:
                         case 'q': break
-                        case 'qst':
-                            questions = get_questions()
-                            pretty_print(questions)
                         case 'qa':
                             questionsAndAnswers = get_questions_with_answers()
                             pretty_print(questionsAndAnswers)
@@ -254,7 +250,7 @@ while uInput not in ['q', 'quit', 'kill']:
                             while len(answer) == 0: answer = input("Blank answer, enter again: ")
 
                             post_answer(int(qId), int(pId), answer)
-                    con = input('Would you like to search for another event? (y/n): ').strip().lower()
+                    con = input('Would you like to interact with the forum again? (y/n): ').strip().lower()
                     if con == 'n': break 
                     elif not con == 'y': con = input('Invalid entry (y/n): ').strip().lower()  
             case _:
