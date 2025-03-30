@@ -10,17 +10,16 @@ def get_members_list():
       FROM Member; 
       """
     ).fetchall()
-
-def get_member_ids():
-    with connect_to_db() as conn:
-        cursor = conn.cursor()
-        cursor.execute("""
-          SELECT memberId
-          FROM Member;
-        """)
-
-        rows = cursor.fetchall()
-        return [row[0] for row in rows]
+  
+def get_member_name_by_id(member_id: int):
+  with connect_to_db() as conn:
+    return conn.execute(
+      """
+      SELECT firstName, lastName
+      FROM Member
+      WHERE memberId = ?
+      """, 
+      (member_id,)).fetchone()
 
 def format_member(member: dict):
   """
