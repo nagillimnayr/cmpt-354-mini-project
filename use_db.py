@@ -106,8 +106,8 @@ while uInput not in ['q', 'quit', 'kill']:
                             else: print_item(result)
                             
                     con = input('Would you like to search for another item? (y/n)\n>').strip().lower()
-                    while choice not in ['y', 'n']:
-                        choice = input('Invaild entry\n>').strip().lower()
+                    while con not in ['y', 'n']:
+                        con = input('Invaild entry\n>').strip().lower()
                     if con == 'n': break 
             case 'brw' | 'borrowitem':
                 while True:
@@ -119,8 +119,8 @@ while uInput not in ['q', 'quit', 'kill']:
                     borrow_item(int(mId), int(iId))
 
                     con = input('Would you like to borrow another item? (y/n)\n>').strip().lower()
-                    while choice not in ['y', 'n']:
-                        choice = input('Invaild entry\n>').strip().lower()
+                    while con not in ['y', 'n']:
+                        con = input('Invaild entry\n>').strip().lower()
                     if con == 'n': break 
             case 'rtn' | 'returnitem':
                 while True:
@@ -174,8 +174,8 @@ while uInput not in ['q', 'quit', 'kill']:
                     donate_item(title, author, format, description, publishDate, publisher)
 
                     con = input('Would you like to donate another item? (y/n)\n>').strip().lower()
-                    while choice not in ['y', 'n']:
-                        choice = input('Invaild entry\n>').strip().lower()
+                    while con not in ['y', 'n']:
+                        con = input('Invaild entry\n>').strip().lower()
                     if con == 'n': break  
             case 'fndevt' | 'findevent':
                 while True:
@@ -194,8 +194,8 @@ while uInput not in ['q', 'quit', 'kill']:
 
                             find_event_by_id(int(eId))
                     con = input('Would you like to search for another event? (y/n)\n>').strip().lower()
-                    while choice not in ['y', 'n']:
-                        choice = input('Invaild entry\n>').strip().lower()
+                    while con not in ['y', 'n']:
+                        con = input('Invaild entry\n>').strip().lower()
                     if con == 'n': break  
             case 'reg' | 'register':
                 while True:
@@ -212,8 +212,8 @@ while uInput not in ['q', 'quit', 'kill']:
                     register_for_event(int(mId), int(eId))
 
                     con = input('Would you like to register for another event? (y/n)\n>').strip().lower()
-                    while choice not in ['y', 'n']:
-                        choice = input('Invaild entry\n>').strip().lower()
+                    while con not in ['y', 'n']:
+                        con = input('Invaild entry\n>').strip().lower()
                     if con == 'n': break  
             case 'vlt' | 'volunteer':
                 mId = MID
@@ -273,8 +273,8 @@ while uInput not in ['q', 'quit', 'kill']:
                             post_answer(int(qId), int(pId), answer)
 
                     con = input('Would you like to interact with the forum again? (y/n)\n>').strip().lower()
-                    while choice not in ['y', 'n']:
-                        choice = input('Invaild entry\n>').strip().lower()
+                    while con not in ['y', 'n']:
+                        con = input('Invaild entry\n>').strip().lower()
                     if con == 'n': break    
             case _:
                 print('base case')
