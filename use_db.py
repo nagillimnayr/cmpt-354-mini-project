@@ -2,8 +2,6 @@ from datetime import datetime
 
 from db_functions import *
 
-KEYWORDS = ['fnditm', 'finditem', 'brw', 'borrowitem', 'rtn', 'returnitem', 'dnt', 'donate', 'fndevt', 'findevent', 'reg', 'register', 'vlt', 'volunteer', 'qst', 'questions']
-
 MID = -1
 PID = -1
 
@@ -79,8 +77,7 @@ while uInput not in ['q', 'quit', 'kill']:
             'Register Event:       -reg     -register\n'
             'Volunteer:            -vlt     -volunteer\n'
             'Ask Librarian:        -qst     -question')
-    
-    # Check for input in db keywords
+
     match sInput[0]:
         case 'fnditm' | 'finditem':
                 while True:
