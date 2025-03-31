@@ -110,7 +110,7 @@ while uInput not in ['q', 'quit', 'kill']:
                             
                     con = input('Would you like to search for another item? (y/n)\n>').strip().lower()
                     while con not in ['y', 'n']:
-                        con = input('Invaild entry\n>').strip().lower()
+                        con = input('Invalid entry\n>').strip().lower()
                     if con == 'n': break 
             case 'brw' | 'borrowitem':
                 while True:
