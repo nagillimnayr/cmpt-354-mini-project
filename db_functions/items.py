@@ -56,22 +56,16 @@ def print_item_list_view(items: list[dict]):
   print_table_list(items, column_labels)
   
 
-def search_for_item(search_term: str):
+def search_for_items(search_term: str, filters: list[str]):
   """
   Searches for an Item based on the provided search term. 
   Will compare the search term with the `title`, `author`, `description`, 
   and `publisher` attributes.
   """
-  filters = [
-    'title',
-    'author',
-    'description',
-    'publisher',
-  ]
-  where_clause = " OR ".join([ "Item." + filter + " LIKE :search" for filter in filters])
+  where_clause = " OR ".join([ "ItemListView." + filter + " LIKE :search" for filter in filters])
   query = """
     SELECT DISTINCT * 
-    FROM Item
+    FROM ItemListView
     WHERE """ + where_clause + ";"
 
   with connect_to_db() as conn:

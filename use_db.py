@@ -91,8 +91,11 @@ while uInput not in ['q', 'quit', 'kill']:
                         case 't': 
                             sTerm = input('Search Term: ')
                             if sTerm == 'b': break
-
-                            results = search_for_item(sTerm)
+                            filters = [
+                                'title',
+                                'author',
+                            ]
+                            results = search_for_items(sTerm, filters)
                             if len(results) == 0: print("No items found.")
                             else: 
                               print('\nItems found:\n')
