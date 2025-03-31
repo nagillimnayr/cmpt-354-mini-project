@@ -11,6 +11,17 @@ def get_members_list():
       """
     ).fetchall()
   
+def get_member(member_id: int):
+  with connect_to_db() as conn:
+    return conn.execute(
+      """
+      SELECT * 
+      FROM Member
+      WHERE Member.memberId = ?;
+      """, 
+      (member_id,)
+    ).fetchone()  
+  
 def get_member_name_by_id(member_id: int):
   with connect_to_db() as conn:
     return conn.execute(

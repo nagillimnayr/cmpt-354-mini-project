@@ -16,9 +16,20 @@ def get_personnel_ids():
     cursor = conn.cursor()
     cursor.execute("""
       SELECT personnelId, memberId
-      FROM personnel;
+      FROM Personnel;
     """)
     return cursor.fetchall()
+  
+def get_personnel(personnel_id: int):
+  with connect_to_db() as conn:
+    return conn.execute(
+      """
+      SELECT * 
+      FROM PersonnelView
+      WHERE PersonnelView.personnelId = ?;
+      """, 
+      (personnel_id,)
+    ).fetchone()
   
 def find_personnel_id_by_member_id(member_id: int):
   with connect_to_db() as conn:

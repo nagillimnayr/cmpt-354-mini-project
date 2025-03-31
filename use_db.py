@@ -6,37 +6,50 @@ MID = -1
 PID = -1
 
 print ('Hello, are you a member (m) or personnel (p)?')
-uInput = input('> ').lower()
-while not uInput in ['m', 'p']: uInput = input('Invalid entry (m or p) \n> ').lower()
+uInput = input('> ').strip().lower()
+while not uInput in ['m', 'p']: uInput = input('Invalid entry (m or p) \n> ').strip().lower()
 match uInput:
     case 'm':
-        mId = input('Enter member Id\n> ')
-        while not mId.isdigit(): mId = input('Invalid memberId, enter again\n> ')
-        mId = int(mId)
+        while True:
+            mId = input('Enter member ID\n> ')
+            if mId in ['q', 'quit', 'exit']:
+                print('Exiting...')
+                exit(0)
+            if not mId.isdigit(): 
+                print('Invalid memberId, enter again\n')
+                continue
+            mId = int(mId)
 
-        members = get_members_list()
-        mIds = [m['memberId'] for m in members]
-        while mId not in mIds:
-            mId = input('Member Id not found, enter again\n> ')
-        MID = mId
-        mName = [m for m in members if m['memberId'] == mId]
-        mName = mName[0]['firstName'] + ' ' + mName[0]['lastName']
-        print('\nHello,', mName)
+            member = get_member(mId)
+            if member is None:
+                print(f'Member with ID: {mId} not found, please enter again\n')
+                continue
+
+            MID = mId
+            name = member['firstName'] + ' ' + member['lastName']
+            print('\nHello,', name)
+            break;
     case 'p':
-        pId = input('Enter personnel Id\n> ')
-        while not pId.isdigit(): pId = input('Invalid personnelId, enter again\n> ')
-        pId = int(pId)
-
-        personnel = get_personnel_ids()
-        pIds = [p['personnelId'] for p in personnel] 
-        while pId not in pIds:
-            pId = input('Personnel Id not found, enter again\n> ')
-        PID = pId
-        pMemId = [p['memberId'] for p in personnel if p['personnelId'] == pId]
-        MID = pMemId[0]
-        pName = get_member_name_by_id(int(pMemId[0]))
-        pName = pName['firstName'] + ' ' + pName['lastName']
-        print('\nHello,', pName)
+        is_valid = False
+        while True:
+            pId = input('Enter personnel ID\n> ')
+            if pId in ['q', 'quit', 'exit']:
+                print('Exiting...')
+                exit(0)
+            if not pId.isdigit(): 
+                print('Invalid personnelId, enter again\n')
+                continue
+            pId = int(pId)
+        
+            personnel = get_personnel(pId)
+            if personnel is None:
+                print(f'Personnel with ID: {pId} not found, please enter again\n')
+                continue
+            PID = personnel['personnelId']
+            MID = personnel['memberId']
+            name = personnel['firstName'] + ' ' + personnel['lastName']
+            print('\nHello,', name)
+            break
         
 print('How can I assist you? (type help for a list of commands)')
 
@@ -139,23 +152,23 @@ while uInput not in ['q', 'quit', 'kill']:
                     if con == 'n': break 
         case 'dnt' | 'donateitem':
                 while True:
-                    title = input('Title\n>')
+                    title = input('Title:\n>')
                     if title == 'b': break
                     while len(title) == 0: title = input('Invalid title\n>')
 
-                    author = input('Author\n>')
+                    author = input('Author:\n>')
                     if author == 'b': break
                     while len(author) == 0: author = input('Invalid author\n>')
 
-                    format = input('Format\n>')
+                    format = input('Format:\n>')
                     if format == 'b': break
                     while len(format) == 0: format = input('Invalid format\n>')
 
-                    description = input('Description\n>')
+                    description = input('Description:\n>')
                     if description == 'b': break
                     while len(description) == 0: description = input('Invalid description\n>')
                         
-                    publishDate = input('Publish Date (YYYY-MM-DD)\n>')
+                    publishDate = input('Publish Date (YYYY-MM-DD):\n>')
                     if publishDate == 'b': break
                     while len(publishDate) == 0: publishDate = input('Invalid publish date\n>')
                     isValid = False
@@ -166,7 +179,7 @@ while uInput not in ['q', 'quit', 'kill']:
                         except ValueError:
                             publishDate = input('Invalid publish date\n>')
 
-                    publisher = input('Publisher\n>')
+                    publisher = input('Publisher:\n>')
                     if publisher == 'b': break
                     while len(publisher) == 0: publisher = input('Invalid publisher\n>') 
 
