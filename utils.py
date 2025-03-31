@@ -29,7 +29,6 @@ def convert_date(val: bytes):
 
 sqlite3.register_converter("date", convert_date)
 
-
 def print_table_list(objs: list[dict], column_labels: list[tuple[str, str]]):
   """
   Prints a table.

@@ -63,7 +63,6 @@ def find_event_by_id(event_id: int):
   except sqlite3.Error as e:
     print(f"Database error: {e}")
 
-
 def register_for_event(member_id:int, event_id:int):
   """
   Registers a library member for an event.
@@ -86,7 +85,7 @@ def register_for_event(member_id:int, event_id:int):
         print(f"Error: Event ID {event_id} does not exist.")
         return None
 
-      room_id = event[1]
+      room_id = event['roomId']
       print(f"✅ Event ID {event_id} found, located in Room {room_id}.")
 
       print(f"🔎 Checking if Member ID {member_id} exists...")
@@ -142,3 +141,28 @@ def register_for_event(member_id:int, event_id:int):
 
   except sqlite3.Error as e:
       print(f"Database error: {e}")
+
+def display_events():
+  try:
+    with connect_to_db() as conn:
+      cursor = conn.cursor()
+      cursor.execute(
+        """
+          SELECT E.eventId, E.title, E.type, E.dateTimeStart, E.dateTimeEnd, S.name AS location
+          FROM Event E
+          LEFT JOIN SocialRoom S ON E.roomId = S.roomId
+        """
+      )
+      result = cursor.fetchall()
+      labels = [
+        ('eventId', 'ID'),
+        ('title', 'Title'),
+        ('type', 'Type'),
+        ('dateTimeStart', 'Start Time'),
+        ('dateTimeEnd', 'End Time'),
+        ('location', 'Room')
+      ]
+      print_table_list(result, labels)
+
+  except sqlite3.Error as e:
+    print(f"Database error: {e}")

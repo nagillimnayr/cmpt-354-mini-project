@@ -57,7 +57,6 @@ def register_member_as_volunteer(member_id: int):
     )
     
     personnel_id = cursor.lastrowid
-    print(f'personnelId: {personnel_id}')
     if personnel_id is not None:
       print(f"✅ Member with ID: {member_id} successfully registered as a volunteer!\nTheir Personnel ID is: {personnel_id}. ")
     else:
