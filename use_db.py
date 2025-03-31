@@ -4,12 +4,12 @@ from db_functions import *
 
 KEYWORDS = ['fnditm', 'finditem', 'brw', 'borrowitem', 'rtn', 'returnitem', 'dnt', 'donate', 'fndevt', 'findevent', 'reg', 'register', 'vlt', 'volunteer', 'qst', 'questions']
 
-MID = 0
-PID = 0
+MID = -1
+PID = -1
 
 print ('Hello, are you a member (m) or personnel (p)?')
-uInput = input('> ')
-while not uInput in ['m', 'p']: uInput = input('Invalid entry (m or p) \n> ')
+uInput = input('> ').lower()
+while not uInput in ['m', 'p']: uInput = input('Invalid entry (m or p) \n> ').lower()
 match uInput:
     case 'm':
         mId = input('Enter member Id\n> ')
@@ -23,7 +23,7 @@ match uInput:
         MID = mId
         mName = [m for m in members if m['memberId'] == mId]
         mName = mName[0]['firstName'] + ' ' + mName[0]['lastName']
-        print('Hello, ', mName)
+        print('\nHello,', mName)
     case 'p':
         pId = input('Enter personnel Id\n> ')
         while not pId.isdigit(): pId = input('Invalid personnelId, enter again\n> ')
@@ -35,15 +35,15 @@ match uInput:
             pId = input('Personnel Id not found, enter again\n> ')
         PID = pId
         pMemId = [p['memberId'] for p in personnel if p['personnelId'] == pId]
-        print(pMemId)
+        MID = pMemId[0]
         pName = get_member_name_by_id(int(pMemId[0]))
         pName = pName['firstName'] + ' ' + pName['lastName']
-        print('Hello, ', pName)
+        print('\nHello,', pName)
         
 print('How can I assist you? (type help for a list of commands)')
 
 while uInput not in ['q', 'quit', 'kill']:
-    uInput = input('Enter input\n> ').strip().lower()
+    uInput = input('\nEnter input\n> ').strip().lower()
     if len(uInput) == 0: continue
     sInput = uInput.split()
 
@@ -105,9 +105,10 @@ while uInput not in ['q', 'quit', 'kill']:
                             if result is None: print("No item found.")
                             else: print_item(result)
                             
-                    con = input('Would you like to search for another item? (y/n): ').strip().lower()
-                    if con == 'n': break
-                    elif not con == 'y': con = input('Invalid entry (y/n): ').strip().lower()
+                    con = input('Would you like to search for another item? (y/n)\n>').strip().lower()
+                    while choice not in ['y', 'n']:
+                        choice = input('Invaild entry\n>').strip().lower()
+                    if con == 'n': break 
             case 'brw' | 'borrowitem':
                 while True:
                     mId = MID
@@ -117,9 +118,10 @@ while uInput not in ['q', 'quit', 'kill']:
 
                     borrow_item(int(mId), int(iId))
 
-                    con = input('Would you like to borrow another item? (y/n): ').strip().lower()
+                    con = input('Would you like to borrow another item? (y/n)\n>').strip().lower()
+                    while choice not in ['y', 'n']:
+                        choice = input('Invaild entry\n>').strip().lower()
                     if con == 'n': break 
-                    elif not con == 'y': con = input('Invalid entry (y/n): ').strip().lower()
             case 'rtn' | 'returnitem':
                 while True:
                     itemId = input('Item Id: ')
@@ -132,84 +134,90 @@ while uInput not in ['q', 'quit', 'kill']:
 
                     return_item(int(itemId), int(instanceId))
 
-                    con = input('Would you like to return another item? (y/n): ').strip().lower()
+                    con = input('Would you like to return another item? (y/n)\n>').strip().lower()
+                    while choice not in ['y', 'n']:
+                        choice = input('Invaild entry\n>').strip().lower()
                     if con == 'n': break 
-                    elif not con == 'y': con = input('Invalid entry (y/n): ').strip().lower()
             case 'dnt' | 'donateitem':
                 while True:
-                    title = input('Title: ')
+                    title = input('Title\n>')
                     if title == 'b': break
-                    while len(title) == 0: title = input('Invalid title: ')
+                    while len(title) == 0: title = input('Invalid title\n>')
 
-                    author = input('Author: ')
+                    author = input('Author\n>')
                     if author == 'b': break
-                    while len(author) == 0: author = input('Invalid author: ')
+                    while len(author) == 0: author = input('Invalid author\n>')
 
-                    format = input('Format: ')
+                    format = input('Format\n>')
                     if format == 'b': break
-                    while len(format) == 0: format = input('Invalid format: ')
+                    while len(format) == 0: format = input('Invalid format\n>')
 
-                    description = input('Description: ')
+                    description = input('Description\n>')
                     if description == 'b': break
-                    while len(description) == 0: description = input('Invalid description: ')
+                    while len(description) == 0: description = input('Invalid description\n>')
                         
-                    publishDate = input('Publish Date (YYYY-MM-DD): ')
+                    publishDate = input('Publish Date (YYYY-MM-DD)\n>')
                     if publishDate == 'b': break
-                    while len(publishDate) == 0: publishDate = input('Invalid publish date: ')
+                    while len(publishDate) == 0: publishDate = input('Invalid publish date\n>')
                     isValid = False
                     while not isValid:
                         try:
                             datetime.strptime(publishDate, '%Y-%m-%d')
                             break
                         except ValueError:
-                            publishDate = input('Invalid publish date: ')
+                            publishDate = input('Invalid publish date\n>')
 
-                    publisher = input('Publisher: ')
+                    publisher = input('Publisher\n>')
                     if publisher == 'b': break
-                    while len(publisher) == 0: publisher = input('Invalid publisher: ') 
+                    while len(publisher) == 0: publisher = input('Invalid publisher\n>') 
 
                     donate_item(title, author, format, description, publishDate, publisher)
 
-                    con = input('Would you like to donate another item? (y/n): ').strip().lower()
-                    if con == 'n': break 
-                    elif not con == 'y': con = input('Invalid entry (y/n): ').strip().lower()
+                    con = input('Would you like to donate another item? (y/n)\n>').strip().lower()
+                    while choice not in ['y', 'n']:
+                        choice = input('Invaild entry\n>').strip().lower()
+                    if con == 'n': break  
             case 'fndevt' | 'findevent':
                 while True:
-                    choice = input('Search by term (t) or by item Id (i): ')
+                    choice = input('Search by term (t) or by item Id (i)\n>').strip().lower()
                     match choice:
                         case 'b': break
                         case 't': 
-                            sTerm = input('Search Term: ')
+                            sTerm = input('Search Term: ').strip()
                             if sTerm == 'b': break
 
                             search_for_event(sTerm)
                         case 'i':
-                            eId = input('Event Id: ')
+                            eId = input('Event Id: ').strip().lower()
                             if eId == 'b': break
-                            
+                            while not eId.isdigit(): eId = input('\nInvalid eventId, enter again\n>').strip()
+
                             find_event_by_id(int(eId))
-                    con = input('Would you like to search for another event? (y/n): ').strip().lower()
-                    if con == 'n': break 
-                    elif not con == 'y': con = input('Invalid entry (y/n): ').strip().lower()  
+                    con = input('Would you like to search for another event? (y/n)\n>').strip().lower()
+                    while choice not in ['y', 'n']:
+                        choice = input('Invaild entry\n>').strip().lower()
+                    if con == 'n': break  
             case 'reg' | 'register':
                 while True:
+                    choice = input('Would you like to see a list of all events? (y/n)\n>').strip().lower()
+                    while choice not in ['y', 'n']:
+                        choice = input('Invaild entry\n>').strip().lower()
+                    if choice == 'y':
+                        display_events()
+                    
                     mId = MID
-                    eId = input('Event Id: ')
+                    eId = input('Event Id: ').strip()
                     if eId == 'b': break
-                    while not eId.isdigit(): eId = input('\nInvalid eventId, enter again: ')
+                    while not eId.isdigit(): eId = input('\nInvalid eventId, enter again: ').strip()
                     register_for_event(int(mId), int(eId))
 
-                    con = input('Would you like to search for another event? (y/n): ').strip().lower()
-                    if con == 'n': break 
-                    elif not con == 'y': con = input('Invalid entry (y/n): ').strip().lower()
+                    con = input('Would you like to register for another event? (y/n)\n>').strip().lower()
+                    while choice not in ['y', 'n']:
+                        choice = input('Invaild entry\n>').strip().lower()
+                    if con == 'n': break  
             case 'vlt' | 'volunteer':
-                while True:
-                    mId = MID
-                    register_member_as_volunteer(int(mId))
-
-                    con = input('Would you like to register another member? (y/n): ').strip().lower()
-                    if con == 'n': break 
-                    elif not con == 'y': con = input('Invalid entry (y/n): ').strip().lower()
+                mId = MID
+                register_member_as_volunteer(int(mId))
             case 'qst' | 'questions':
                 while True:
                     print(
@@ -223,6 +231,15 @@ while uInput not in ['q', 'quit', 'kill']:
                         case 'q': break
                         case 'qa':
                             questionsAndAnswers = get_questions_with_answers()
+                            labels = [
+                                ('questionId', 'QID'),
+                                ('memberId', 'MID'),
+                                ('question', 'Question'),
+                                ('datePublished', 'Date'),
+                                ('firstName', 'First Name'),
+                                ('lastName', 'Last Name'),
+                                ('answers', 'Answers')
+                            ]
                             pretty_print(questionsAndAnswers)
                         case 'sq':
                             qId = input('Question Id: ')
@@ -239,6 +256,10 @@ while uInput not in ['q', 'quit', 'kill']:
 
                             post_question(int(mId), question)
                         case 'aq':
+                            if PID == -1: 
+                                print('Error, only library personnel can answer questions')
+                                break
+
                             qId = input('Question Id: ')
                             if (qId == 'b'): break
                             while not qId.isdigit(): qId = input('Invalid questionId, enter again: ')
@@ -250,9 +271,11 @@ while uInput not in ['q', 'quit', 'kill']:
                             while len(answer) == 0: answer = input("Blank answer, enter again: ")
 
                             post_answer(int(qId), int(pId), answer)
-                    con = input('Would you like to interact with the forum again? (y/n): ').strip().lower()
-                    if con == 'n': break 
-                    elif not con == 'y': con = input('Invalid entry (y/n): ').strip().lower()  
+
+                    con = input('Would you like to interact with the forum again? (y/n)\n>').strip().lower()
+                    while choice not in ['y', 'n']:
+                        choice = input('Invaild entry\n>').strip().lower()
+                    if con == 'n': break    
             case _:
                 print('base case')
 
