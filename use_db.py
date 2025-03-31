@@ -81,9 +81,8 @@ while uInput not in ['q', 'quit', 'kill']:
             'Ask Librarian:        -qst     -question')
     
     # Check for input in db keywords
-    if sInput[0] in KEYWORDS:
-        match sInput[0]:
-            case 'fnditm' | 'finditem':
+    match sInput[0]:
+        case 'fnditm' | 'finditem':
                 while True:
                     choice = input('Search by term (t) or by item Id (i): ')
                     match choice:
@@ -112,7 +111,7 @@ while uInput not in ['q', 'quit', 'kill']:
                     while con not in ['y', 'n']:
                         con = input('Invalid entry\n>').strip().lower()
                     if con == 'n': break 
-            case 'brw' | 'borrowitem':
+        case 'brw' | 'borrowitem':
                 while True:
                     mId = MID
                     iId = input('Item Id: ')
@@ -125,7 +124,7 @@ while uInput not in ['q', 'quit', 'kill']:
                     while con not in ['y', 'n']:
                         con = input('Invaild entry\n>').strip().lower()
                     if con == 'n': break 
-            case 'rtn' | 'returnitem':
+        case 'rtn' | 'returnitem':
                 while True:
                     itemId = input('Item Id: ')
                     if itemId == 'b': break 
@@ -141,7 +140,7 @@ while uInput not in ['q', 'quit', 'kill']:
                     while choice not in ['y', 'n']:
                         choice = input('Invaild entry\n>').strip().lower()
                     if con == 'n': break 
-            case 'dnt' | 'donateitem':
+        case 'dnt' | 'donateitem':
                 while True:
                     title = input('Title\n>')
                     if title == 'b': break
@@ -180,7 +179,7 @@ while uInput not in ['q', 'quit', 'kill']:
                     while con not in ['y', 'n']:
                         con = input('Invaild entry\n>').strip().lower()
                     if con == 'n': break  
-            case 'fndevt' | 'findevent':
+        case 'fndevt' | 'findevent':
                 while True:
                     choice = input('Search by term (t) or by item Id (i)\n>').strip().lower()
                     match choice:
@@ -200,7 +199,7 @@ while uInput not in ['q', 'quit', 'kill']:
                     while con not in ['y', 'n']:
                         con = input('Invaild entry\n>').strip().lower()
                     if con == 'n': break  
-            case 'reg' | 'register':
+        case 'reg' | 'register':
                 while True:
                     choice = input('Would you like to see a list of all events? (y/n)\n>').strip().lower()
                     while choice not in ['y', 'n']:
@@ -218,10 +217,10 @@ while uInput not in ['q', 'quit', 'kill']:
                     while con not in ['y', 'n']:
                         con = input('Invaild entry\n>').strip().lower()
                     if con == 'n': break  
-            case 'vlt' | 'volunteer':
+        case 'vlt' | 'volunteer':
                 mId = MID
                 register_member_as_volunteer(int(mId))
-            case 'qst' | 'questions':
+        case 'qst' | 'questions':
                 while True:
                     print(
                         'see all questions & answers (qa),\n'
@@ -279,7 +278,7 @@ while uInput not in ['q', 'quit', 'kill']:
                     while con not in ['y', 'n']:
                         con = input('Invaild entry\n>').strip().lower()
                     if con == 'n': break    
-            case _:
-                print('base case')
+        case _:
+            print('base case')
 
 print('Exiting...')
