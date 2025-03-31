@@ -5,6 +5,8 @@ from db_functions import *
 MID = -1
 PID = -1
 
+QUIT_COMMANDS = ['q', 'quit', 'exit', 'kill']
+
 print ('Hello, are you a member (m) or personnel (p)?')
 uInput = input('> ').strip().lower()
 while not uInput in ['m', 'p']: uInput = input('Invalid entry (m or p) \n> ').strip().lower()
@@ -12,7 +14,7 @@ match uInput:
     case 'm':
         while True:
             mId = input('Enter member ID\n> ')
-            if mId in ['q', 'quit', 'exit']:
+            if mId in QUIT_COMMANDS:
                 print('Exiting...')
                 exit(0)
             if not mId.isdigit(): 
@@ -33,7 +35,7 @@ match uInput:
         is_valid = False
         while True:
             pId = input('Enter personnel ID\n> ')
-            if pId in ['q', 'quit', 'exit']:
+            if pId in QUIT_COMMANDS:
                 print('Exiting...')
                 exit(0)
             if not pId.isdigit(): 
@@ -53,7 +55,7 @@ match uInput:
         
 print('How can I assist you? (type help for a list of commands)')
 
-while uInput not in ['q', 'quit', 'kill']:
+while uInput not in QUIT_COMMANDS:
     uInput = input('\nEnter input\n> ').strip().lower()
     if len(uInput) == 0: continue
     sInput = uInput.split()
@@ -94,7 +96,7 @@ while uInput not in ['q', 'quit', 'kill']:
     match sInput[0]:
         case 'fnditm' | 'finditem':
                 while True:
-                    choice = input('Search by term (t) or by item Id (i): ')
+                    choice = input('Search by term (t) or by item ID (i): ')
                     match choice:
                         case 'b': break
                         case 't': 
@@ -110,7 +112,7 @@ while uInput not in ['q', 'quit', 'kill']:
                               print('\nItems found:\n')
                               print_item_list_view(results)
                         case 'i':
-                            iId = input('Item Id: ')
+                            iId = input('Item ID: ')
                             if iId == 'b': break
                             
                             result = find_item_by_id(int(iId))
@@ -124,7 +126,7 @@ while uInput not in ['q', 'quit', 'kill']:
         case 'brw' | 'borrowitem':
                 while True:
                     mId = MID
-                    iId = input('Item Id: ')
+                    iId = input('Item ID: ')
                     if iId == 'b': break 
                     while not iId.isdigit(): itemId = input('\nInvalid itemId, enter again: ')
 
@@ -136,11 +138,11 @@ while uInput not in ['q', 'quit', 'kill']:
                     if con == 'n': break 
         case 'rtn' | 'returnitem':
                 while True:
-                    itemId = input('Item Id: ')
+                    itemId = input('Item ID: ')
                     if itemId == 'b': break 
                     while not itemId.isdigit(): itemId = input('\nInvalid itemId, enter again: ')
 
-                    instanceId = input('Instance Id: ')
+                    instanceId = input('Instance ID: ')
                     if instanceId == 'b': break 
                     while not instanceId.isdigit(): instanceId = input('\nInvalid itemId, enter again: ')
 
@@ -191,7 +193,7 @@ while uInput not in ['q', 'quit', 'kill']:
                     if con == 'n': break  
         case 'fndevt' | 'findevent':
                 while True:
-                    choice = input('Search by term (t) or by item Id (i)\n>').strip().lower()
+                    choice = input('Search by term (t) or by item ID (i)\n>').strip().lower()
                     match choice:
                         case 'b': break
                         case 't': 
@@ -200,7 +202,7 @@ while uInput not in ['q', 'quit', 'kill']:
 
                             search_for_event(sTerm)
                         case 'i':
-                            eId = input('Event Id: ').strip().lower()
+                            eId = input('Event ID: ').strip().lower()
                             if eId == 'b': break
                             while not eId.isdigit(): eId = input('\nInvalid eventId, enter again\n>').strip()
 
@@ -218,7 +220,7 @@ while uInput not in ['q', 'quit', 'kill']:
                         display_events()
                     
                     mId = MID
-                    eId = input('Event Id: ').strip()
+                    eId = input('Event ID: ').strip()
                     if eId == 'b': break
                     while not eId.isdigit(): eId = input('\nInvalid eventId, enter again: ').strip()
                     register_for_event(int(mId), int(eId))
@@ -254,7 +256,7 @@ while uInput not in ['q', 'quit', 'kill']:
                             ]
                             pretty_print(questionsAndAnswers)
                         case 'sq':
-                            qId = input('Question Id: ')
+                            qId = input('Question ID: ')
                             if (qId == 'b'): break
                             while not qId.isdigit(): qId = input('Invalid questionId, enter again: ')
 
@@ -272,7 +274,7 @@ while uInput not in ['q', 'quit', 'kill']:
                                 print('Error, only library personnel can answer questions')
                                 break
 
-                            qId = input('Question Id: ')
+                            qId = input('Question ID: ')
                             if (qId == 'b'): break
                             while not qId.isdigit(): qId = input('Invalid questionId, enter again: ')
                             
