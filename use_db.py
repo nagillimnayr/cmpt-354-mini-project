@@ -276,6 +276,7 @@ while uInput not in ['q', 'quit', 'kill']:
                         con = input('Invalid entry\n>').strip().lower()
                     if con == 'n': break    
         case _:
-            print('base case')
+            print('Unrecognized command. Type `help` for a list of commands.')
+
 
 print('Exiting...')
