@@ -19,7 +19,6 @@ def borrow_item(member_id: int, item_id: int):
   Handles borrowing an item:
   1. Checks for available copies.
   2. Creates a checkout record.
-  3. Updates ItemInstance to mark the item as checked out.
   """
   try:
     with connect_to_db() as conn:

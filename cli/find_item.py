@@ -3,7 +3,7 @@
 from db_functions.checkout_records import borrow_item
 from db_functions.items import *
 
-def handle_item_details(item_id: int):
+def handle_item_details(member_id: int, item_id: int):
   item = get_item_copy_count_view(item_id)
   if item is None: 
     print("No item found.")
@@ -28,7 +28,7 @@ def handle_item_details(item_id: int):
       option = input('Would you like to check this item out? (y/n)\n>').strip().lower()
       match option:
         case 'y':
-          borrow_item()
+          borrow_item(member_id, item_id)
           return 
         case 'n' | 'b' | 'back': 
           return 
@@ -47,7 +47,7 @@ def handle_item_id_input(msg: str):
     else:
       print('Invalid item ID.')
 
-def find_item():
+def find_item(member_id: int):
   while True:
     choice = input('Search by title (t), author (a), or by item ID (i): ')
     match choice:
@@ -66,7 +66,7 @@ def find_item():
           item_id = handle_item_id_input("Enter an item's ID to see more details, or (b) to go back.\n>")
           if item_id is None:
             return 
-          handle_item_details(item_id)
+          handle_item_details(member_id, item_id)
           
             
       case 'i':
