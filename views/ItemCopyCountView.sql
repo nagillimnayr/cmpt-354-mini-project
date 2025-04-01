@@ -1,17 +1,14 @@
--- Retrieves subset of `Item` information along with counts of the total
--- number of instances, and the number of available copies.
-CREATE VIEW IF NOT EXISTS ItemListView
+-- Retrieves `Item` information along with counts of the total
+-- number of copies, and the number of available copies.
+CREATE VIEW IF NOT EXISTS ItemCopyCountView
 AS 
 SELECT 
-  itemId, 
-  title,
-  author,
-  format,
+  *,
   (
     SELECT COUNT(*) 
     FROM ItemInstance 
     WHERE ItemInstance.itemId = Item.itemId
-  ) AS numCopies,
+  ) AS totalCopies,
   (
     SELECT COUNT(*) 
     FROM ItemInstance 

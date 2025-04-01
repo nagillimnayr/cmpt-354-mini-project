@@ -2,7 +2,7 @@ import sqlite3
 from datetime import datetime, timedelta
 
 from constants import *
-from db_functions.item_instances import select_item_instance
+from db_functions.item_instances import get_available_item_instance, select_item_instance
 from utils import *
 
 
@@ -12,7 +12,7 @@ def get_all_checkout_records_list():
       SELECT * 
       FROM CheckoutRecord;
     """).fetchall()
-  
+
 
 def borrow_item(member_id: int, item_id: int):
   """
@@ -25,30 +25,26 @@ def borrow_item(member_id: int, item_id: int):
     with connect_to_db() as conn:
       cursor = conn.cursor()
 
-      print(f"🔎 Checking for available copies of Item ID {item_id}...")
-
       # Step 1: Find an available copy (not checked out)
       cursor.execute("""
-        SELECT instanceId 
-        FROM ItemInstance
+        SELECT * 
+        FROM ItemInstanceView
         WHERE 
           itemId = ? AND currentCheckoutId IS NULL
         LIMIT 1;
       """, (item_id,))
-      result: dict = cursor.fetchone()
+      instance = get_available_item_instance(item_id)
 
-      if result is None:
+      if instance is None:
         print(f"Error: No available copies for Item ID {item_id}.")
         return None
 
-      instance_id = result['instanceId']
-      print(f"✅ Step 1: Found available copy - Instance ID {instance_id}")
+      instance_id = instance['instanceId']
 
       # Step 2: Insert a new checkout record
-
       cursor.execute("""
-        INSERT INTO CheckoutRecord (memberId, itemId, instanceId, checkoutDate, dueDate, returnDate)
-        VALUES (?, ?, ?, DATE('now'), DATE('now', '+14 days'), NULL);
+        INSERT INTO CheckoutRecord (memberId, itemId, instanceId, checkoutDate, dueDate)
+        VALUES (?, ?, ?, DATE(current_date, 'localtime'), DATE(current_date, 'localtime', '+14 days'));
       """, (member_id, item_id, instance_id))
       checkout_id = cursor.lastrowid  # Retrieve the newly inserted checkoutId
 
@@ -60,15 +56,12 @@ def borrow_item(member_id: int, item_id: int):
       checkout_record = cursor.fetchone()
       due_date = checkout_record['dueDate']
       
-      print(f"✅ Step 2: Created checkout record - Checkout ID {checkout_id}, Due Date {due_date}")
-
+      print(f"✅ Successfully checked out copy of {instance['title']}")
+      print(f"Item ID {item_id}, Instance ID {instance_id}")
+      print(f"Checkout ID {checkout_id}, Due Date {due_date}")
       instance = select_item_instance(item_id, instance_id)
       
       assert instance['currentCheckoutId'] == checkout_id
-
-      print(f"✅ Step 3: Item ID {item_id}, Instance ID {instance_id} marked as checked out.")
-
-      print(f"✅ Borrow process completed for Item ID {item_id}, Instance ID {instance_id}.")
 
   except sqlite3.Error as e:
       print(f"Database error: {e}")

@@ -32,19 +32,25 @@ def format_item(item: dict) -> str:
 def print_item(item: dict):
   print(format_item(item))
 
-def get_item_list_view():
+def get_item_list():
   with connect_to_db() as conn:
     return conn.execute(
       """
-      SELECT * 
-      FROM ItemListView 
+      SELECT 
+        itemId, 
+        title,
+        author,
+        format,
+        totalCopies,
+        availableCopies 
+      FROM ItemCopyCountView
       ORDER BY 
         format ASC,
         title ASC;
       """
     ).fetchall()
 
-def print_item_list_view(items: list[dict]):
+def print_item_list(items: list[dict]):
   column_labels = [
     ('itemId', 'ID'),
     ('title', 'Title'),
@@ -79,14 +85,28 @@ def search_for_items(search_term: str, filters: list[str]):
       }
     ).fetchall()
 
-def find_item_by_id(item_id: int):
+def get_item(item_id: int):
   query = """
     SELECT * 
     FROM Item
     WHERE Item.itemId = ?;
   """
   with connect_to_db() as conn:
-    return conn.execute(query, (item_id,)).fetchone()
+    return conn.execute(
+      """
+      SELECT * 
+      FROM Item
+      WHERE Item.itemId = ?;
+      """, (item_id,)).fetchone()
+    
+def get_item_copy_count_view(item_id: int):
+  with connect_to_db() as conn:
+    return conn.execute(
+      """
+      SELECT * 
+      FROM ItemCopyCountView
+      WHERE Item.itemId = ?;
+      """, (item_id,)).fetchone()
 
 def donate_item(title:str, author:str, format:str, description:str, publish_date: str, publisher:str):
   """

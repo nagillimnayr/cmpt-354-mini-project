@@ -26,3 +26,20 @@ def select_item_instance(item_id: int, instance_id: int):
       'item_id': item_id,
       'instance_id': instance_id,
     }).fetchone()
+
+def get_available_item_instance(item_id):
+  """
+  Returns an `ItemInstance` if one is available, otherwise returns None.
+  """
+  with connect_to_db() as conn:
+    return conn.execute("""
+      SELECT * 
+      FROM ItemInstance
+      WHERE
+        itemId = :item_id
+        AND 
+        currentCheckoutId IS NULL
+      LIMIT 1;       
+    """, {
+      'item_id': item_id,
+    }).fetchone()

@@ -92,36 +92,46 @@ while uInput not in QUIT_COMMANDS:
             'Register Event:       -reg     -register\n'
             'Volunteer:            -vlt     -volunteer\n'
             'Ask Librarian:        -qst     -question')
-
+        continue
+    
     match sInput[0]:
         case 'fnditm' | 'finditem':
                 while True:
-                    choice = input('Search by term (t) or by item ID (i): ')
+                    choice = input('Search by title (t), author (a), or by item ID (i): ')
                     match choice:
                         case 'b': break
-                        case 't': 
+                        case 't' | 'a': 
                             sTerm = input('Search Term: ')
                             if sTerm == 'b': break
-                            filters = [
-                                'title',
-                                'author',
-                            ]
+                            filters = []
+                            if choice == 't': filters.append('title')
+                            if choice == 'a': filters.append('author') 
                             results = search_for_items(sTerm, filters)
                             if len(results) == 0: print("No items found.")
                             else: 
-                              print('\nItems found:\n')
-                              print_item_list_view(results)
+                                print('\nItems found:\n')
+                                print_item_list(results)
+                                
+                                item_id = input("Enter an item's ID to see more details, or (b) to go back.\n>")
+                                if itemId == 'b': break 
+                                
+                              
                         case 'i':
                             iId = input('Item ID: ')
                             if iId == 'b': break
                             
-                            result = find_item_by_id(int(iId))
+                            result = get_item(int(iId))
                             if result is None: print("No item found.")
-                            else: print_item(result)
-                            
-                    con = input('Would you like to search for another item? (y/n)\n>').strip().lower()
+                            else: 
+                                print()
+                                print_item(result)
+                                print()
+                        case _:
+                            print('Unrecognized command.')
+                            continue
+                    con = input('Would you like to search for another item? (y/n)\n').strip().lower()
                     while con not in ['y', 'n']:
-                        con = input('Invalid entry\n>').strip().lower()
+                        con = input('Invalid entry. Would you like to search for another item? (y/n)\n').strip().lower()
                     if con == 'n': break 
         case 'brw' | 'borrowitem':
                 while True:

@@ -4,8 +4,8 @@ from db_functions import *
 
 def test_queries():
 
-  items = get_item_list_view()
-  print_item_list_view(items)
+  items = get_item_list()
+  print_item_list(items)
 
 
 if __name__ == '__main__':
