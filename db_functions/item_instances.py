@@ -17,7 +17,7 @@ def select_item_instance(item_id: int, instance_id: int):
   with connect_to_db() as conn:
     return conn.execute("""
       SELECT * 
-      FROM ItemInstance
+      FROM ItemInstanceView
       WHERE
         itemId = :item_id
         AND
@@ -34,7 +34,7 @@ def get_available_item_instance(item_id):
   with connect_to_db() as conn:
     return conn.execute("""
       SELECT * 
-      FROM ItemInstance
+      FROM ItemInstanceView
       WHERE
         itemId = :item_id
         AND 

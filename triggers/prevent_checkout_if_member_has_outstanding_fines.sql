@@ -10,5 +10,5 @@ WHEN
       NEW.memberId = OutstandingFinesView.memberId 
   ) > 0 
 BEGIN 
-  SELECT RAISE (ABORT, 'Member has outstanding fines');
+  SELECT RAISE (ABORT, 'Member has outstanding fines. Checking out new items is not permitted.');
 END;

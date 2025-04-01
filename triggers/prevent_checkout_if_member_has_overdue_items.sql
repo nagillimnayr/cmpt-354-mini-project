@@ -16,5 +16,5 @@ WHEN
       JULIANDAY(DATE(current_date, 'localtime')) >= JULIANDAY(CheckoutRecord.dueDate)
   ) > 0 
 BEGIN 
-  SELECT RAISE (ABORT, 'Member has overdue items');
+  SELECT RAISE (ABORT, 'Member has overdue items. Checking out new items is not permitted.');
 END;

@@ -47,7 +47,7 @@ def handle_item_id_input(msg: str):
     else:
       print('Invalid item ID.')
 
-def find_item(member_id: int):
+def handle_find_item(member_id: int):
   while True:
     choice = input('Search by title (t), author (a), or by item ID (i): ')
     match choice:
@@ -63,26 +63,19 @@ def find_item(member_id: int):
         else: 
           print('\nItems found:\n')
           print_item_list(results)
-          item_id = handle_item_id_input("Enter an item's ID to see more details, or (b) to go back.\n>")
-          if item_id is None:
-            return 
-          handle_item_details(member_id, item_id)
-          
+          item_id = handle_item_id_input("Enter an item's ID to see more details, or (b) to go back.")
+          if item_id is not None:
+            handle_item_details(member_id, item_id)
             
       case 'i':
-          iId = input('Item ID: ')
-          if iId == 'b': break
-          
-          result = get_item(int(iId))
-          if result is None: print("No item found.")
-          else: 
-            print()
-            print_item(result)
-            print()
+          item_id = handle_item_id_input('Item ID: ')
+          if item_id is not None: 
+            handle_item_details(member_id, item_id)
       case _:
           print('Unrecognized command.')
           continue
-  con = input('Would you like to search for another item? (y/n)\n').strip().lower()
-  while con not in ['y', 'n']:
-      con = input('Invalid entry. Would you like to search for another item? (y/n)\n').strip().lower()
-  if con == 'n': return 
+        
+    option = input('Would you like to search for another item? (y/n)\n>').strip().lower()
+    while option not in ['y', 'n']:
+        option = input('Invalid entry. Would you like to search for another item? (y/n)\n').strip().lower()
+    if option == 'n': return 

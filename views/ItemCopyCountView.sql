@@ -2,7 +2,7 @@
 -- number of copies, and the number of available copies.
 CREATE VIEW IF NOT EXISTS ItemCopyCountView
 AS 
-SELECT 
+SELECT DISTINCT 
   *,
   (
     SELECT COUNT(*) 
@@ -17,4 +17,5 @@ SELECT
       AND 
       ItemInstance.currentCheckoutId IS NULL
   ) AS availableCopies
-FROM Item;
+FROM 
+  Item;

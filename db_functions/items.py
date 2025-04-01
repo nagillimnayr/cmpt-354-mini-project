@@ -56,7 +56,7 @@ def print_item_list(items: list[dict]):
     ('title', 'Title'),
     ('author', 'Author'),
     ('format', 'Format'),
-    ('numCopies', '# of Copies'),
+    ('totalCopies', '# of Copies'),
     ('availableCopies', 'Available Copies'),
   ]
   print_table_list(items, column_labels)
@@ -68,11 +68,21 @@ def search_for_items(search_term: str, filters: list[str]):
   Will compare the search term with the `title`, `author`, `description`, 
   and `publisher` attributes.
   """
-  where_clause = " OR ".join([ "ItemListView." + filter + " LIKE :search" for filter in filters])
+  where_clause = " OR ".join([filter + " LIKE :search" for filter in filters])
   query = """
-    SELECT DISTINCT * 
-    FROM ItemListView
-    WHERE """ + where_clause + ";"
+    SELECT DISTINCT
+      itemId, 
+      title,
+      author,
+      format,
+      totalCopies,
+      availableCopies  
+    FROM ItemCopyCountView
+    WHERE """ + where_clause + """
+    ORDER BY 
+      format ASC,
+      title ASC;
+    """
 
   with connect_to_db() as conn:
     cursor = conn.cursor()
@@ -89,14 +99,14 @@ def get_item(item_id: int):
   query = """
     SELECT * 
     FROM Item
-    WHERE Item.itemId = ?;
+    WHERE itemId = ?;
   """
   with connect_to_db() as conn:
     return conn.execute(
       """
       SELECT * 
       FROM Item
-      WHERE Item.itemId = ?;
+      WHERE itemId = ?;
       """, (item_id,)).fetchone()
     
 def get_item_copy_count_view(item_id: int):
@@ -105,7 +115,7 @@ def get_item_copy_count_view(item_id: int):
       """
       SELECT * 
       FROM ItemCopyCountView
-      WHERE Item.itemId = ?;
+      WHERE itemId = ?;
       """, (item_id,)).fetchone()
 
 def donate_item(title:str, author:str, format:str, description:str, publish_date: str, publisher:str):

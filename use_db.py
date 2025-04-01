@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from db_functions import *
+from cli import *
 
 MID = -1
 PID = -1
@@ -13,12 +14,12 @@ while not uInput in ['m', 'p']: uInput = input('Invalid entry (m or p) \n> ').st
 match uInput:
     case 'm':
         while True:
-            mId = input('Enter member ID\n> ')
+            mId = input('Enter Member ID:\n> ')
             if mId in QUIT_COMMANDS:
                 print('Exiting...')
                 exit(0)
             if not mId.isdigit(): 
-                print('Invalid memberId, enter again\n')
+                print('Invalid Member ID, enter again\n')
                 continue
             mId = int(mId)
 
@@ -34,12 +35,12 @@ match uInput:
     case 'p':
         is_valid = False
         while True:
-            pId = input('Enter personnel ID\n> ')
+            pId = input('Enter Personnel ID\n> ')
             if pId in QUIT_COMMANDS:
                 print('Exiting...')
                 exit(0)
             if not pId.isdigit(): 
-                print('Invalid personnelId, enter again\n')
+                print('Invalid Personnel ID, enter again\n')
                 continue
             pId = int(pId)
         
@@ -55,11 +56,14 @@ match uInput:
         
 print('How can I assist you? (type help for a list of commands)')
 
-while uInput not in QUIT_COMMANDS:
-    uInput = input('\nEnter input\n> ').strip().lower()
+while True:
+    uInput = input('\nEnter input:\n> ').strip().lower()
     if len(uInput) == 0: continue
     sInput = uInput.split()
 
+    if uInput in QUIT_COMMANDS:
+        break
+    
     # Check for input in help keywords
     if sInput[0] in ['h', 'help']:
         if len(sInput) > 1:
@@ -96,43 +100,7 @@ while uInput not in QUIT_COMMANDS:
     
     match sInput[0]:
         case 'fnditm' | 'finditem':
-                while True:
-                    choice = input('Search by title (t), author (a), or by item ID (i): ')
-                    match choice:
-                        case 'b': break
-                        case 't' | 'a': 
-                            sTerm = input('Search Term: ')
-                            if sTerm == 'b': break
-                            filters = []
-                            if choice == 't': filters.append('title')
-                            if choice == 'a': filters.append('author') 
-                            results = search_for_items(sTerm, filters)
-                            if len(results) == 0: print("No items found.")
-                            else: 
-                                print('\nItems found:\n')
-                                print_item_list(results)
-                                
-                                item_id = input("Enter an item's ID to see more details, or (b) to go back.\n>")
-                                if itemId == 'b': break 
-                                
-                              
-                        case 'i':
-                            iId = input('Item ID: ')
-                            if iId == 'b': break
-                            
-                            result = get_item(int(iId))
-                            if result is None: print("No item found.")
-                            else: 
-                                print()
-                                print_item(result)
-                                print()
-                        case _:
-                            print('Unrecognized command.')
-                            continue
-                    con = input('Would you like to search for another item? (y/n)\n').strip().lower()
-                    while con not in ['y', 'n']:
-                        con = input('Invalid entry. Would you like to search for another item? (y/n)\n').strip().lower()
-                    if con == 'n': break 
+            handle_find_item(member_id=MID)
         case 'brw' | 'borrowitem':
                 while True:
                     mId = MID

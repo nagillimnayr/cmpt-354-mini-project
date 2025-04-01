@@ -25,13 +25,6 @@ def borrow_item(member_id: int, item_id: int):
       cursor = conn.cursor()
 
       # Step 1: Find an available copy (not checked out)
-      cursor.execute("""
-        SELECT * 
-        FROM ItemInstanceView
-        WHERE 
-          itemId = ? AND currentCheckoutId IS NULL
-        LIMIT 1;
-      """, (item_id,))
       instance = get_available_item_instance(item_id)
 
       if instance is None:
@@ -39,6 +32,7 @@ def borrow_item(member_id: int, item_id: int):
         return None
 
       instance_id = instance['instanceId']
+      title = instance['title']
 
       # Step 2: Insert a new checkout record
       cursor.execute("""
@@ -55,15 +49,12 @@ def borrow_item(member_id: int, item_id: int):
       checkout_record = cursor.fetchone()
       due_date = checkout_record['dueDate']
       
-      print(f"✅ Successfully checked out copy of {instance['title']}")
+      print(f'✅ Successfully checked out copy of "{title}"')
       print(f"Item ID {item_id}, Instance ID {instance_id}")
       print(f"Checkout ID {checkout_id}, Due Date {due_date}")
-      instance = select_item_instance(item_id, instance_id)
-      
-      assert instance['currentCheckoutId'] == checkout_id
 
   except sqlite3.Error as e:
-      print(f"Database error: {e}")
+      print(f"Error: {e}")
 
 
 def return_item(item_id:int, instance_id:int):
