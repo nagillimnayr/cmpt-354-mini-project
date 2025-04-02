@@ -5,7 +5,7 @@ Instructions to run the App:
 From a terminal, run:
 
 ```bash
-python create_db.py`
+python create_db.py
 ```
 
 This will seed the database with the initial data.
