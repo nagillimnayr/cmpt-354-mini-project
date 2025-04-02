@@ -3,8 +3,8 @@ CREATE TABLE IF NOT EXISTS Event (
     title VARCHAR(200) NOT NULL,
     description TEXT,
     type VARCHAR(50),
-    dateTimeStart TIMESTAMP NOT NULL,
-    dateTimeEnd TIMESTAMP NOT NULL,
+    dateTimeStart DATETIME NOT NULL,
+    dateTimeEnd DATETIME NOT NULL,
     roomId INTEGER NOT NULL,
 
     FOREIGN KEY (roomId) REFERENCES SocialRoom(roomId)

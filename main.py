@@ -24,21 +24,21 @@ def main():
             if len(sInput) > 1:
                 match sInput[1]:
                     case 'fnditm' | 'finditem':
-                        print('Description: search for item either by keyword(s) or itemId')
+                        print('Description: Search for an item either by keyword or item ID.')
                     case 'brw' | 'borrowitem':
-                        print('Description: checkout item from the library')
+                        print('Description: Check out an item from the library.')
                     case 'rtn' | 'returnitem':
-                        print('Description: return a previously checked out item to the library')
+                        print('Description: Return a previously checked out item to the library.')
                     case 'dnt' | 'donateitem':
-                        print('Description: donate an item to the library`s collection')
+                        print('Description: Donate an item to the library`s collection.')
                     case 'fndevt' | 'findevent':
-                        print('Description: search for an event by title, type, date, or recommended audience')
+                        print('Description: Search for an event by title, type, date, or recommended audience.')
                     case 'reg' | 'register':
-                        print('Description: register to attend a specific event by eventId')
+                        print('Description: Register to attend a specific event by event ID.')
                     case 'vlt' | 'volunteer':
-                        print('Description: volunteer to become a librarian')
+                        print('Description: Sign up to be a volunteer at the library.')
                     case 'qst' | 'questions':
-                        print('Description: see question board/post a question')
+                        print('Description: View Q&A forum or ask a question.')
                     case _:
                         print('Unrecognized Command')
             else:
@@ -61,7 +61,7 @@ def main():
                         mId = MID
                         iId = input('Item ID: ')
                         if iId == 'b': break 
-                        while not iId.isdigit(): itemId = input('\nInvalid itemId, enter again: ')
+                        while not iId.isdigit(): itemId = input('\nInvalid item ID, enter again: ')
 
                         borrow_item(int(mId), int(iId))
 
@@ -126,7 +126,7 @@ def main():
                         if con == 'n': break  
             case 'fndevt' | 'findevent':
                     while True:
-                        choice = input('Search by term (t) or by item ID (i)\n>').strip().lower()
+                        choice = input('Search by term (t) or by event ID (i)\n>').strip().lower()
                         match choice:
                             case 'b': break
                             case 't': 
