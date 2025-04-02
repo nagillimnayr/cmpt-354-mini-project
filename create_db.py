@@ -16,7 +16,46 @@ def get_all_table_names():
     ).fetchall()
     return [table['name'] for table in tables]
 
+def get_all_view_names():
+  with connect_to_db() as conn:
+    views = conn.execute(
+      """
+      SELECT name 
+      FROM sqlite_master 
+      WHERE type='view';
+      """
+    ).fetchall()
+    return [view['name'] for view in views]
+  
+def get_all_trigger_names():
+  with connect_to_db() as conn:
+    triggers = conn.execute(
+      """
+      SELECT name 
+      FROM sqlite_master 
+      WHERE type='trigger';
+      """
+    ).fetchall()
+    return [trigger['name'] for trigger in triggers]
 
+def drop_all_triggers():
+  trigger_names = get_all_trigger_names()
+  pretty_print(trigger_names)
+  with connect_to_db() as conn:
+    conn.execute("PRAGMA foreign_keys = OFF;")
+    for trigger_name in trigger_names:
+      print(f"Dropping Trigger: {trigger_name}")
+      conn.execute("DROP TRIGGER IF EXISTS " + trigger_name + ";" )
+
+def drop_all_views():
+  view_names = get_all_view_names()
+  pretty_print(view_names)
+  with connect_to_db() as conn:
+    conn.execute("PRAGMA foreign_keys = OFF;")
+    for view_name in view_names:
+      print(f"Dropping View: {view_name}")
+      conn.execute("DROP VIEW IF EXISTS " + view_name + ";" )
+      
 def drop_all_tables():
   table_names = get_all_table_names()
   pretty_print(table_names)
@@ -26,6 +65,10 @@ def drop_all_tables():
       print(f"Dropping Table: {table_name}")
       conn.execute("DROP TABLE IF EXISTS " + table_name + ";" )
 
+def drop_all():
+  drop_all_triggers()
+  drop_all_views()
+  drop_all_tables()
 
 def execute_sql_in_directory(dir_name: str, conn: sqlite3.Connection = connect_to_db()):
   """
@@ -74,7 +117,7 @@ def create_sample_data():
 
 if __name__ == '__main__':
   try:
-    drop_all_tables()
+    drop_all()
     create_database()
     create_sample_data()
     

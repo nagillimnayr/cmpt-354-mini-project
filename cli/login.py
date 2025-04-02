@@ -4,6 +4,7 @@ from constants import *
 def handle_login() -> tuple[int, int | None]:
   mId = -1
   pId = None
+  name = ''
   print ('Hello, are you a member (m) or personnel (p)?')
   uInput = input('> ').strip().lower()
   while not uInput in ['m', 'p']: uInput = input('Invalid entry (m or p) \n> ').strip().lower()
@@ -25,7 +26,6 @@ def handle_login() -> tuple[int, int | None]:
           continue
       
         name = member['firstName'] + ' ' + member['lastName']
-        print('\nHello,', name)
         break
     case 'p':
       while True:
@@ -44,6 +44,29 @@ def handle_login() -> tuple[int, int | None]:
           continue
         mId = int(personnel['memberId'])
         name = personnel['firstName'] + ' ' + personnel['lastName']
-        print('\nHello,', name)
         break
+  print('\nHello,', name)
+  
+  borrowed_items = get_borrowed_items_for_member(mId)
+  overdue_items = [item for item in borrowed_items if item['isOverdue']]
+  num_borrowed = len(borrowed_items)
+  num_overdue = len(overdue_items)
+  
+  print(f"You currently have {num_borrowed} borrowed items, {num_overdue} of which are overdue:")
+  
+  for item in borrowed_items:
+    item['isOverdue'] = bool(item['isOverdue']) 
+  
+  if num_borrowed > 0:
+    print_table_list(borrowed_items, [
+      ('itemId', 'Item ID'),
+      ('checkoutId', 'Checkout ID'),
+      ('title', 'Title'),
+      ('author', 'Author'),
+      ('format', 'Format'),
+      ('checkoutDate', 'Checkout Date'),
+      ('dueDate', 'Due Date'),
+      ('isOverdue', 'Is Overdue?'),
+    ])
+  
   return mId, pId

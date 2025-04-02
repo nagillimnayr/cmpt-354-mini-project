@@ -41,8 +41,8 @@ def print_table_list(objs: list[dict], column_labels: list[tuple[str, str]]):
   }
   
   for obj in objs:
-    for key, value in obj.items():
-      max_lengths[key] = max(max_lengths[key], len(str(value)))
+    for key, _ in column_labels:
+      max_lengths[key] = max(max_lengths[key], len(str(obj[key])))
   
   col_sep =  ' | '
     

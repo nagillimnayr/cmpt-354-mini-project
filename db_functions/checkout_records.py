@@ -1,8 +1,7 @@
 import sqlite3
-from datetime import datetime, timedelta
 
 from constants import *
-from db_functions.item_instances import get_available_item_instance, select_item_instance
+from db_functions.item_instances import *
 from utils import *
 
 
@@ -13,6 +12,19 @@ def get_all_checkout_records_list():
       FROM CheckoutRecord;
     """).fetchall()
 
+def get_borrowed_items_for_member(member_id: int):
+  with connect_to_db() as conn:
+    return conn.execute(
+      """
+      SELECT * 
+      FROM 
+        BorrowedItemsView
+      WHERE 
+        memberId = ?
+      ORDER BY 
+        checkoutDate;
+      """, (member_id,)
+    ).fetchall() 
 
 def borrow_item(member_id: int, item_id: int):
   """
