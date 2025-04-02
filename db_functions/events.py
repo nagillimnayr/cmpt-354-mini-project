@@ -72,8 +72,6 @@ def register_for_event(member_id:int, event_id:int):
     with connect_to_db() as conn:
       cursor = conn.cursor()
 
-      print(f"🔎 Checking if Event ID {event_id} exists...")
-
       # Step 1: Verify event exists
       cursor.execute("SELECT eventId, roomId FROM Event WHERE eventId = ?;", (event_id,))
       event = cursor.fetchone()
@@ -82,9 +80,6 @@ def register_for_event(member_id:int, event_id:int):
         return None
 
       room_id = event['roomId']
-      print(f"✅ Event ID {event_id} found, located in Room {room_id}.")
-
-      print(f"🔎 Checking if Member ID {member_id} exists...")
 
       # Step 2: Verify member exists
       cursor.execute("SELECT memberId FROM Member WHERE memberId = ?;", (member_id,))
@@ -92,17 +87,11 @@ def register_for_event(member_id:int, event_id:int):
         print(f"Error: Member ID {member_id} does not exist.")
         return None
 
-      print(f"✅ Member ID {member_id} found.")
-
-      print(f"🔎 Checking if Member ID {member_id} is already registered for Event ID {event_id}...")
-
       # Step 3: Check if already registered
       cursor.execute("SELECT * FROM EventAttendance WHERE memberId = ? AND eventId = ?;", (member_id, event_id))
       if cursor.fetchone():
         print(f"Error: Member ID {member_id} is already registered for Event ID {event_id}.")
         return None
-
-      print(f"✅ Member is not yet registered. Proceeding with registration.")
 
       # Step 4: (Optional) Check if event room capacity is full
       cursor.execute(

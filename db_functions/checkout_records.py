@@ -87,7 +87,7 @@ def borrow_item(member_id: int, item_id: int):
       print(f"Error: {e}")
 
 
-def return_item(item_id:int, instance_id:int):
+def return_item(checkout_id: int):
   """
   Handles returning a borrowed item:
   1. Finds the active checkout record (if exists).
@@ -98,23 +98,17 @@ def return_item(item_id:int, instance_id:int):
     with connect_to_db() as conn:
       cursor = conn.cursor()
 
-      print(f"🔎 Checking if Item ID {item_id}, Instance ID {instance_id} is currently borrowed...")
-
       # Step 1: Find active checkout record
       cursor.execute("""
-        SELECT checkoutId, dueDate 
+        SELECT checkoutId 
         FROM CheckoutRecord
-        WHERE instanceId = ? AND itemId = ? AND returnDate IS NULL;
-      """, (instance_id, item_id))
+        WHERE checkoutId = ? AND returnDate IS NULL;
+      """, (checkout_id, ))
       checkout_record = cursor.fetchone()
 
       if checkout_record is None:
-        print(f"Error: Item ID {item_id}, Instance ID {instance_id} is NOT currently checked out.")
+        print(f"Error: No checkout active record with ID {checkout_id} was found.")
         return None
-
-      checkout_id = checkout_record['checkoutId']
-      due_date = checkout_record['dueDate']
-      print(f"✅ Found active checkout: Checkout ID {checkout_id}, Due Date {due_date}")
 
       # Step 2: Mark the checkout record as returned
       cursor.execute("""
@@ -123,8 +117,6 @@ def return_item(item_id:int, instance_id:int):
         WHERE checkoutId = ?;
       """, (checkout_id,))
       
-      conn.commit()
-      
       cursor.execute("""
         SELECT * 
         FROM CheckoutRecord
@@ -132,12 +124,11 @@ def return_item(item_id:int, instance_id:int):
       """, (checkout_id,))
       checkout_record = cursor.fetchone()
       return_date = checkout_record['returnDate']
+      item_id = checkout_record['itemId']
+      instance_id = checkout_record['instanceId']
 
       print(f"✅ Checkout ID {checkout_id} marked as returned on {return_date}")
-
-      print(f"✅ Item ID {item_id}, Instance ID {instance_id} is now available for borrowing.")
-
-      print(f"✅ Return process completed for Item ID {item_id}, Instance ID {instance_id}.")
+      print(f"Item ID {item_id}, Instance ID {instance_id} is now available for borrowing.")
 
   except sqlite3.Error as e:
     print(f"Database error: {e}")
