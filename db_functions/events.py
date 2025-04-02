@@ -14,8 +14,6 @@ def search_for_event(search_term):
     with connect_to_db() as conn:
       cursor = conn.cursor()
 
-      print("🔎 Searching for events...")
-
       filters = [
         'title',
         'type',
@@ -48,7 +46,7 @@ def find_event_by_id(event_id: int):
       cursor = conn.cursor()
       cursor.execute(
         """
-          SELECT E.eventId, E.title, E.type, E.dateTimeStart, E.dateTimeEnd, S.name AS location
+          SELECT E.eventId, E.title, E.type, E.description, E.dateTimeStart, E.dateTimeEnd, S.roomId, S.name AS roomName
           FROM Event E
           LEFT JOIN SocialRoom S ON E.roomId = S.roomId
           LEFT JOIN EventRecommendation ER ON E.eventId = ER.eventId
@@ -56,8 +54,7 @@ def find_event_by_id(event_id: int):
         """, 
         (event_id,)
       )
-      result = cursor.fetchall()
-      pretty_print(result)
+      return cursor.fetchone()
 
   except sqlite3.Error as e:
     print(f"Database error: {e}")

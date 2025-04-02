@@ -55,7 +55,6 @@ def main():
                 handle_find_item(member_id=mId)
             case 'brw' | 'borrowitem':
                     while True:
-                        mId = MID
                         iId = input('Item ID: ')
                         if iId == 'b': break 
                         while not iId.isdigit(): itemId = input('\nInvalid item ID, enter again: ')
