@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from cli.qa_forum import handle_qa_forum
 from db_functions import *
 from cli import *
 from constants import *
@@ -164,65 +165,7 @@ def main():
                     mId = MID
                     register_member_as_volunteer(int(mId))
             case 'qst' | 'questions':
-                qa_forum_menu_options = [
-                    '(qa) See all questions & answers',
-                    '(sq) See answers to a specific question',
-                    '(pq) Post a question',
-                ]
-                if pId is not None:
-                    qa_forum_menu_options.append('(aq) Answer question')
-                qa_forum_menu = '\n'.join(qa_forum_menu_options) 
-                qa_forum_menu_header = '\n' + '\n'.join([
-                    '---------------------------------------------------------',
-                    '----------------------- Q&A Forum -----------------------',
-                    '---------------------------------------------------------',
-                ])  
-                while True:
-                    print(qa_forum_menu_header)
-                    print(qa_forum_menu)
-
-                    choice = input('\nEnter choice: ')
-                    match choice:
-                        case 'q': break
-                        case 'qa':
-                            questionsAndAnswers = get_questions_with_answers()
-                            pretty_print(questionsAndAnswers)
-                        case 'sq':
-                            qId = input('Question ID: ')
-                            if (qId == 'b'): break
-                            while not qId.isdigit(): qId = input('Invalid questionId, enter again: ')
-
-                            answers = get_answers_to_question(int(qId))  
-                            pretty_print(answers)      
-                        case 'pq':
-                            question = input("Question to post: ")
-                            if (question == 'b'): break
-                            while len(question) == 0: question = input("Blank question, enter again: ")
-
-                            post_question(mId, question)
-                        case 'aq':
-                            if pId is None: 
-                                print('Error, only library personnel can answer questions.')
-                                break
-
-                            qId = input('Question ID: ')
-                            if (qId == 'b'): break
-                            while not qId.isdigit(): qId = input('Invalid questionId, enter again: ')
-                            
-                            answer = input("Answer to post: ")
-                            if (answer == 'b'): break
-                            while len(answer) == 0: answer = input("Blank answer, enter again: ")
-
-                            post_answer(int(qId), int(pId), answer)
-                        
-                        case _:
-                            print('Unrecognized command.')
-                            continue
-                        
-                    con = input('Would you like to interact with the forum again? (y/n)\n>').strip().lower()
-                    while con not in ['y', 'n']:
-                        con = input('Invalid entry\n>').strip().lower()
-                    if con == 'n': break    
+                handle_qa_forum(mId, pId)
             case _:
                 print('Unrecognized command. Type `help` for a list of commands.')
 
