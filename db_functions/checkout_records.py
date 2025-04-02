@@ -26,6 +26,24 @@ def get_borrowed_items_for_member(member_id: int):
       """, (member_id,)
     ).fetchall() 
 
+def get_overdue_items_for_member(member_id: int):
+  with connect_to_db() as conn:
+    return conn.execute(
+      """
+      SELECT 
+        *,
+        FLOOR(JULIANDAY(current_date, 'localtime') - JULIANDAY(dueDate, 'localtime')) AS daysLate 
+      FROM 
+        BorrowedItemsView
+      WHERE 
+        memberId = ?
+        AND 
+        isOverdue IS TRUE
+      ORDER BY 
+        checkoutDate;
+      """, (member_id,)
+    ).fetchall() 
+
 def borrow_item(member_id: int, item_id: int):
   """
   Handles borrowing an item:

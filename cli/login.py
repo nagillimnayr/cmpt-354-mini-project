@@ -1,3 +1,4 @@
+from cli.account import print_account_details
 from db_functions import *
 from constants import *
 
@@ -47,26 +48,6 @@ def handle_login() -> tuple[int, int | None]:
         break
   print('\nHello,', name)
   
-  borrowed_items = get_borrowed_items_for_member(mId)
-  overdue_items = [item for item in borrowed_items if item['isOverdue']]
-  num_borrowed = len(borrowed_items)
-  num_overdue = len(overdue_items)
-  
-  print(f"You currently have {num_borrowed} borrowed items, {num_overdue} of which are overdue:")
-  
-  for item in borrowed_items:
-    item['isOverdue'] = bool(item['isOverdue']) 
-  
-  if num_borrowed > 0:
-    print_table_list(borrowed_items, [
-      ('itemId', 'Item ID'),
-      ('checkoutId', 'Checkout ID'),
-      ('title', 'Title'),
-      ('author', 'Author'),
-      ('format', 'Format'),
-      ('checkoutDate', 'Checkout Date'),
-      ('dueDate', 'Due Date'),
-      ('isOverdue', 'Is Overdue?'),
-    ])
+  print_account_details(mId)
   
   return mId, pId

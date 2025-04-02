@@ -61,4 +61,4 @@ def print_table_list(objs: list[dict], column_labels: list[tuple[str, str]]):
     ) + col_sep
     print(row)
     
-  print(line)
+  print(line, end='\n\n')
