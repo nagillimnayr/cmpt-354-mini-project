@@ -194,12 +194,12 @@ def main():
 
                             answers = get_answers_to_question(int(qId))  
                             pretty_print(answers)      
-                        case 'pst':
+                        case 'pq':
                             question = input("Question to post: ")
                             if (question == 'b'): break
                             while len(question) == 0: question = input("Blank question, enter again: ")
 
-                            post_question(int(mId), question)
+                            post_question(mId, question)
                         case 'aq':
                             if pId is None: 
                                 print('Error, only library personnel can answer questions.')
