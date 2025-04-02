@@ -45,7 +45,7 @@ def main():
                 'Return Item:          -rtn,    -returnitem\n'
                 'Donate Item:          -dnt,    -donate\n'
                 'Find Event:           -fndevt  -findevent\n'
-                'Register Event:       -reg     -register\n'
+                'Register for Event:   -reg     -register\n'
                 'Volunteer:            -vlt     -volunteer\n'
                 'Ask Librarian:        -qst     -question')
             continue
