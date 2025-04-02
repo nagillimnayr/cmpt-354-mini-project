@@ -26,7 +26,7 @@ def search_for_event(search_term):
       where_clause += " OR ER.audienceType LIKE :search"
 
       query = """
-        SELECT E.eventId, E.title, E.type, E.dateTimeStart, E.dateTimeEnd, S.name, ER.audienceType AS location
+        SELECT E.eventId, E.title, E.type, E.dateTimeStart, E.dateTimeEnd, S.name AS roomName, ER.audienceType
         FROM Event E
         LEFT JOIN SocialRoom S ON E.roomId = S.roomId
         LEFT JOIN EventRecommendation ER ON E.eventId = ER.eventId
@@ -37,8 +37,7 @@ def search_for_event(search_term):
           'search': '%'+search_term+'%'
         }
       )
-      results = cursor.fetchall()
-      pretty_print(results)
+      return cursor.fetchall()
 
   except sqlite3.Error as e:
     print(f"Database error: {e}")

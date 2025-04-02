@@ -1,12 +1,9 @@
 from datetime import datetime
 
-from cli.qa_forum import handle_qa_forum
 from db_functions import *
 from cli import *
 from constants import *
 
-MID = -1
-PID = -1
 
 def main():
     mId, pId = handle_login()
@@ -125,25 +122,7 @@ def main():
                             con = input('Invalid entry\n>').strip().lower()
                         if con == 'n': break  
             case 'fndevt' | 'findevent':
-                    while True:
-                        choice = input('Search by term (t) or by event ID (i)\n>').strip().lower()
-                        match choice:
-                            case 'b': break
-                            case 't': 
-                                sTerm = input('Search Term: ').strip()
-                                if sTerm == 'b': break
-
-                                search_for_event(sTerm)
-                            case 'i':
-                                eId = input('Event ID: ').strip().lower()
-                                if eId == 'b': break
-                                while not eId.isdigit(): eId = input('\nInvalid eventId, enter again\n>').strip()
-
-                                find_event_by_id(int(eId))
-                        con = input('Would you like to search for another event? (y/n)\n>').strip().lower()
-                        while con not in ['y', 'n']:
-                            con = input('Invalid entry\n>').strip().lower()
-                        if con == 'n': break  
+                handle_find_event()
             case 'reg' | 'register':
                     while True:
                         choice = input('Would you like to see a list of all events? (y/n)\n>').strip().lower()
@@ -155,14 +134,13 @@ def main():
                         eId = input('Event ID: ').strip()
                         if eId == 'b': break
                         while not eId.isdigit(): eId = input('\nInvalid eventId, enter again: ').strip()
-                        register_for_event(int(mId), int(eId))
+                        register_for_event(mId, int(eId))
 
                         con = input('Would you like to register for another event? (y/n)\n>').strip().lower()
                         while con not in ['y', 'n']:
                             con = input('Invalid entry\n>').strip().lower()
                         if con == 'n': break  
             case 'vlt' | 'volunteer':
-                    mId = MID
                     register_member_as_volunteer(int(mId))
             case 'qst' | 'questions':
                 handle_qa_forum(mId, pId)
