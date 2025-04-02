@@ -1,6 +1,6 @@
 # CMPT 354 Mini-Project: Library App
 
-Instructions to run the App:
+## Instructions to run the App
 
 From a terminal, run:
 
